@@ -1,0 +1,6 @@
+<aside class="sidebar">
+  <input type="text" class="chatroom-search" ng-model="sidebarCtrl.roomQuery" />
+  <ul class="chatrooms">
+    <li ng-repeat="room in rooms | filter:{ $value: sidebarCtrl.roomQuery } track by room.$id">{{room.$value}}</li>
+  </ul>
+</aside>

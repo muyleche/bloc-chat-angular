@@ -1,8 +1,7 @@
 (function() {
-  function homeCtrl($scope, $firebaseArray) {
-    let ref = firebase.database().ref().child('messages');
-    $scope.messages = $firebaseArray(ref);
+  function homeCtrl($scope, RoomService) {
   }
-  angular.module('blocChat')
-    .controller('homeCtrl', homeCtrl);
+  angular
+    .module('chatterBox')
+    .controller('homeCtrl', ['$scope', 'RoomService', homeCtrl]);
 })();
