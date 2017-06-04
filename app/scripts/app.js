@@ -9,7 +9,7 @@
       });
 
       // if any unanticipated URL path is provided, go to the landing page.
-    $urlRouterProvider.when('/home', '/').otherwise('/');
+    $urlRouterProvider.otherwise('/');
 
     // define routes using ui-router.
     $stateProvider
@@ -17,6 +17,11 @@
         url: '/',
         templateUrl: '/templates/home.html',
         controller: 'homeCtrl'
+      })
+      .state('room', {
+        url:'/room/{id:string}',
+        templateUrl: '/templates/chat-room.html',
+        controller: 'chatRoomCtrl'
       });
   }
 
@@ -32,6 +37,6 @@
 
   // define primary angular module and config.
   angular
-    .module('chatterBox', ['ui.router','firebase'])
+    .module('chatterBox', ['ui.router','firebase', 'ui.bootstrap'])
     .config(config);
 })();

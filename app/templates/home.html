@@ -1,1 +1,18 @@
 <h1>Home Page</h1>
+<section>
+  <header>
+    <h2>Feed</h2>
+  </header>
+  <article class="recent-message" ng-repeat="room in rooms">
+    <h4>
+      <a ui-sref="/room/{{room.$id}}">{{room.name}}</a>
+      <span class="date-label">  ({{room.lastMessage.dateSubmitted | date:"MMM d - h:mm a"}})</span>
+    </h4>
+    <p>
+      <span class="author-label">{{room.lastMessage.author}}: </span>
+      {{room.lastMessage.text}}
+    </p>
+  </article>
+  <footer>
+  </footer>
+</section>

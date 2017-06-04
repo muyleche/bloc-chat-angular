@@ -1,6 +1,6 @@
 (function() {
-  function navbarCtrl() {
-
+  function navbarCtrl($scope, $firebaseObject) {
+    
   }
 
   angular
@@ -12,7 +12,7 @@
         link: function() {},
         replace: true,
         templateUrl: '/templates/navbar.html',
-        controller: navbarCtrl
+        controller: ['$scope', '$firebaseObject', navbarCtrl]
       };
     });
 })();

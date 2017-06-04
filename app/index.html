@@ -5,9 +5,11 @@
   <title>ChatterBox</title>
   <link rel="manifest" href="/manifest.json">
   <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,800,600,700,300">
+  <link rel="stylesheet" type="text/css" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <link rel="stylesheet" href="/styles/thirdparty/angular-ui-bootstrap/ui-bootstrap-csp.css">
   <link rel="stylesheet" href="/styles/main.css">
   <link rel="stylesheet" href="/styles/navigation.css">
+  <link rel="stylesheet" href="/styles/chatroom.css">
 </head>
 <body>
   <sidebar></sidebar>
@@ -19,9 +21,13 @@
   <script src="/scripts/thirdparty/angularfire/angularfire.js"></script>
   <script src="/scripts/thirdparty/angular-ui-bootstrap/ui-bootstrap.js"></script>
   <script src="/scripts/app.js"></script>
+  <script src="/scripts/services/user.js"></script>
+  <script src="/scripts/services/message.js"></script>
   <script src="/scripts/services/room.js"></script>
   <script src="/scripts/directives/navbar.js"></script>
+  <script src="/scripts/directives/favorites.js"></script>
   <script src="/scripts/directives/sidebar.js"></script>
   <script src="/scripts/controllers/home.js"></script>
+  <script src="/scripts/controllers/chat-room.js"></script>
 </body>
 </html>

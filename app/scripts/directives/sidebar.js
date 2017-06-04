@@ -1,5 +1,6 @@
 (function(){
-  function sidebarCtrl($scope, RoomService) {
+  function sidebarCtrl($scope, RoomService, $uibModal) {
+    $scope.RoomService = RoomService;
     $scope.rooms = RoomService.all;
   }
 
@@ -11,7 +12,7 @@
         scope: {},
         link: function() {},
         templateUrl: '/templates/sidebar.html',
-        controller: ['$scope', 'RoomService', sidebarCtrl],
+        controller: ['$scope', 'RoomService', '$uibModal', sidebarCtrl],
         replace: true
       };
     })

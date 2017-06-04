@@ -19,7 +19,22 @@ aside.sidebar {
 }
 
 .chatrooms {
-  margin-left: 20px;
+  margin: 15px auto 0;
+  width: 100%;
+}
+
+.chatrooms li:last-child {
+  margin-top: 10px;
+}
+
+input[name="roomName"],
+input[name="roomDescription"] {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input[name="roomDescription"] {
+  resize:vertical;
 }
 
 aside.sidebar ul,
@@ -30,9 +45,10 @@ navbar ul {
 
 navbar {
   position: fixed;
+  display: table;
+  width: 100%;
   top: 0;
   left: 0;
-  right: 0;
   height: 50px;
   box-shadow: 0px 0px 5px 0px black;
   background-color: royalblue;
@@ -50,21 +66,71 @@ navbar a:visited {
   color: white;
 }
 
-.navbar-left,
-.navbar-right {
+.favorites {
+  position: absolute;
+  display: table;
+  left: 200px;
   height: 100%;
-  display: flex;
-  align-items: center;
-  flex: auto;
-  padding: 0 10px;
 }
 
-.navbar-left {
-  justify-content: flex-start;
+.favorite-item {
+  position: relative;
+  z-index: 4;
+  transform: translateY(50%);
+  color: black;
+  padding: 5px;
+  float: left;
+  margin-left: 10px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border-top: 2px solid rgba(0,0,0,0.3);
 }
-.navbar-middle {
-  justify-content: center;
+
+.favorite-item::before,
+.favorite-item::after {
+  content: '';
+  position:absolute;
+  bottom: 0px;
+  background-color: transparent !important;
+  border: 0 solid transparent;
+  border-bottom-width: 30px;
 }
-.navbar-right {
-  justify-content: flex-end;
+
+.favorite-item.active {
+  z-index: 5;
+}
+
+.favorite-item,
+.favorite-item::before,
+.favorite-item::after {
+  background-color: rgba(200,200,200,0.75);
+  border-bottom-color: rgba(200,200,200,0.75);
+}
+
+.favorite-item.active,
+.favorite-item.active::before,
+.favorite-item.active::after {
+  background-color: white;
+  border-bottom-color: white;
+}
+
+.favorite-item::before {
+  left: -10px;
+  border-left-width: 10px;
+}
+
+.favorite-item::after {
+  right: -10px;
+  border-right-width: 10px;
+}
+
+.navbar-area {
+  height: 100%;
+  display: inline-table;
+}
+
+.navbar-link {
+  display: table-cell;
+  vertical-align: middle;
+  padding: 0 15px;
 }
