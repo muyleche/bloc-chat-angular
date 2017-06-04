@@ -7,10 +7,10 @@
     <li ng-init="showChatRoomForm = false">
       <button class="new-chat-room float-left ion-plus" ng-click="showChatRoomForm=true; newRoom={}" ng-disabled="showChatRoomForm"> New Room</button>
       <form ng-show="showChatRoomForm" name="chatroomForm" class="new-chatroom-form">
-        <input type="text" name="roomName" placeholder="Name" required ng-model="newRoom.name"/>
-        <input type="textarea" rows="3" name="roomDescription" placeholder="Description" ng-model="newRoom.description"/>
-        <input type="submit" ng-disabled="chatroomForm.roomName.$error.required" value="Save" ng-click="RoomService.add(newRoom);showChatRoomForm=false"/>
-        <button class="close-new-chat-room" ng-click="showChatRoomForm=false" ng-show="showChatRoomForm">Cancel</button>
+        <input type="text" name="roomName" class="new-chatroom-name" placeholder="Name" required ng-model="newRoom.name"/>
+        <input type="textarea" name="roomDescription" class="new-chatroom-description" placeholder="Description" ng-model="newRoom.description"/>
+        <input type="submit" name="roomSubmit" class="submit-new-chatroom" ng-click="RoomService.add(newRoom);showChatRoomForm=false" ng-disabled="chatroomForm.roomName.$error.required" value="Save"/>
+        <input type="reset" name="roomReset" class="close-new-chatroom" ng-click="showChatRoomForm=false" ng-show="showChatRoomForm" value="Cancel"/>
         </form>
     </li>
   </ul>

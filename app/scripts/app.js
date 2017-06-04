@@ -37,6 +37,6 @@
 
   // define primary angular module and config.
   angular
-    .module('chatterBox', ['ui.router','firebase', 'ui.bootstrap'])
+    .module('chatterBox', ['ui.router','firebase'])
     .config(config);
 })();

@@ -12,7 +12,7 @@
         scope: {},
         link: function() {},
         templateUrl: '/templates/sidebar.html',
-        controller: ['$scope', 'RoomService', '$uibModal', sidebarCtrl],
+        controller: ['$scope', 'RoomService', sidebarCtrl],
         replace: true
       };
     })
