@@ -1,0 +1,12 @@
+<h1>{{room.name}}</h1>
+<article class="chatroom-message" ng-repeat="msg in messages | orderBy:'dateSubmitted'">
+  <div class="message-wrapper">
+    <p class="message-text">{{msg.text}}</p>
+  </div>
+  <span class="date-label">{{msg.dateSubmitted | date:"MMM dd - hh:mm a"}}</span>
+  <span class="author-label">{{msg.author}}</span>
+</article>
+<form>
+  <input type="textarea" rows="5" ng-model="newMessage.text" ng-init="newMessage.author='Tyler';"/>
+  <input type="submit" ng-click="MessageService.add(newMessage, room);newMessage={}" value="Send"/>
+</form>

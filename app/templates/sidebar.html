@@ -1,6 +1,6 @@
 <aside class="sidebar">
   <input type="text" class="chatroom-search" ng-model="sidebarCtrl.roomQuery" />
-  <ul class="chatrooms"><li ng-repeat="room in rooms | filter:sidebarCtrl.roomQuery track by room.$id">
+  <ul class="chatrooms"><li ng-repeat="room in rooms | filter:{ name: sidebarCtrl.roomQuery } track by room.$id">
       <a ui-sref="room({id: '{{room.$id}}'})">{{room.name}}</a>
       <button class="remove float-right ion-trash-b" ng-click="RoomService.remove(room)"></button>
     </li>

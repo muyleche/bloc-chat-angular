@@ -5,7 +5,7 @@
   </header>
   <article class="recent-message" ng-repeat="room in rooms">
     <h4>
-      <a ui-sref="/room/{{room.$id}}">{{room.name}}</a>
+      <a ui-sref="room({id:'{{room.$id}}'})">{{room.name}}</a>
       <span class="date-label">  ({{room.lastMessage.dateSubmitted | date:"MMM d - h:mm a"}})</span>
     </h4>
     <p>
