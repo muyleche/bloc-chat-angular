@@ -1,3 +1,56 @@
-.chatroom-message {
-  border: 1px dotted gray;
+.chatroom-message,
+.recent-message {
+  border: 1px solid rgba(50,50,50, 0.75);
+  border-top: none;
+}
+
+article:first-of-type.chatroom-message,
+article:first-of-type.recent-message {
+  border-top: 1px solid rgba(50,50,50, 0.75);
+}
+
+.post-info {
+  display: inline-block;
+  border-right: 1px solid rgba(50,50,50, 0.75);
+  font-size: 0.75rem;
+  height: 100%;
+  width: 100px;
+  padding: 0.5rem;
+}
+
+.recent-message {
+  border-left: none;
+  border-right: none;
+}
+
+.recent-message .post-info {
+  border: none;
+}
+
+.author-label {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.recent-message .author-label {
+  display: block;
+  font-style: italic;
+}
+.recent-message .author-label:after {
+  content: ':';
+}
+
+.author-thumbnail {
+  width: 50px;
+  height: 50px;
+}
+
+.message-wrapper {
+  padding: 5px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+form[name="new-post-form"] {
+  margin: 15px 0;
 }

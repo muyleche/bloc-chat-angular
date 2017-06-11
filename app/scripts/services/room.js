@@ -1,12 +1,13 @@
 (function() {
   function RoomService ($firebaseArray, $firebaseObject) {
     let Rooms = {};
-    const ref = firebase.database().ref('rooms'),
+    const ref = firebase.database().ref().child('rooms'),
           rooms = $firebaseArray(ref);
     Rooms.all = rooms;
-    Rooms.add = function (item) {
+    Rooms.add = function (event, item) {
       rooms.$add(item).then((ref) => {
         console.log("added record with id " + ref.key);
+        event.target.closest('form').reset();
       });
     };
     Rooms.updateLastMessage = function (room, message) {

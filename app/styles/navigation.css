@@ -1,6 +1,6 @@
 aside.sidebar {
   box-sizing: border-box;
-  padding: 10px;
+  padding: 15px;
   padding-top: 75px;
   width: 180px;
   position: fixed;
@@ -19,21 +19,41 @@ aside.sidebar {
 }
 
 .chatrooms {
-  margin: 15px auto 0;
+  margin: 15px 0;
   width: 100%;
 }
 
-.chatrooms li:last-child {
-  margin-top: 10px;
+li.chatroom-item {
+  position: relative;
+  padding: 1px 2px;
+}
+
+li.chatroom-item a:hover {
+  color: rgba(255,255,255, 0.7);
+}
+
+li.chatroom-item [disabled].btn.icon-only,
+li.chatroom-item [disabled].btn.icon-only {
+  visibility: hidden;
+}
+
+li.chatroom-item button.favorite {
+  color: goldenrod;
+}
+
+.new-chatroom-form {
+  border: 1px solid rgba(0,0,0, 0.3);
+  border-radius: 3px;
+  box-sizing: content-box;
 }
 
 input[name="roomName"],
-input[name="roomDescription"] {
-  width: 100%;
+textarea[name="roomDescription"] {
   box-sizing: border-box;
+  width: 100%;
 }
 
-input[name="roomDescription"] {
+textarea[name="roomDescription"] {
   resize:vertical;
 }
 
@@ -45,14 +65,33 @@ navbar ul {
 
 navbar {
   position: fixed;
-  display: table;
+  z-index: 1000;
+  box-sizing: border-box;
+  padding: 0 10px;
   width: 100%;
+  height: 50px;
   top: 0;
   left: 0;
-  height: 50px;
   box-shadow: 0px 0px 5px 0px black;
   background-color: royalblue;
   color: white;
+}
+
+navbar .logo {
+  padding-right: 0;
+}
+
+navbar .logo img {
+  width: 40px;
+  height: 40px;
+  vertical-align: middle;
+}
+
+navbar .chatter-box {
+  padding-left: 0px;
+  vertical-align: middle;
+  display: inline-block;
+  text-shadow: 2px 2px rgba(0,0,0,0.8);
 }
 
 navbar ul {
@@ -66,71 +105,30 @@ navbar a:visited {
   color: white;
 }
 
-.favorites {
-  position: absolute;
-  display: table;
-  left: 200px;
-  height: 100%;
-}
-
-.favorite-item {
-  position: relative;
-  z-index: 4;
-  transform: translateY(50%);
-  color: black;
-  padding: 5px;
-  float: left;
-  margin-left: 10px;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  border-top: 2px solid rgba(0,0,0,0.3);
-}
-
-.favorite-item::before,
-.favorite-item::after {
-  content: '';
-  position:absolute;
-  bottom: 0px;
-  background-color: transparent !important;
-  border: 0 solid transparent;
-  border-bottom-width: 30px;
-}
-
-.favorite-item.active {
-  z-index: 5;
-}
-
-.favorite-item,
-.favorite-item::before,
-.favorite-item::after {
-  background-color: rgba(200,200,200,0.75);
-  border-bottom-color: rgba(200,200,200,0.75);
-}
-
-.favorite-item.active,
-.favorite-item.active::before,
-.favorite-item.active::after {
-  background-color: white;
-  border-bottom-color: white;
-}
-
-.favorite-item::before {
-  left: -10px;
-  border-left-width: 10px;
-}
-
-.favorite-item::after {
-  right: -10px;
-  border-right-width: 10px;
-}
-
 .navbar-area {
   height: 100%;
-  display: inline-table;
+  display: inline-flex;
 }
 
 .navbar-link {
-  display: table-cell;
-  vertical-align: middle;
-  padding: 0 15px;
+  display: inline-flex;
+  margin: auto 10px;
+}
+
+.navbar-link:first-child {
+  margin-left: 0;
+}
+
+.navbar-link:last-child {
+  margin-right: 0;
+}
+
+.user-auth-section {
+  padding-right: 5px;
+}
+
+.user-profile-image {
+  display: inline;
+  width: 30px;
+  height: 30px;
 }

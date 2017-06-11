@@ -1,11 +1,26 @@
 <navbar>
   <div class='navbar-area float-left'>
-    <a class="navbar-link" ui-sref="home">
-      <img src="" alt="Logo"/>
+    <a class="navbar-link logo"  ui-sref="home">
+      <img class="logo" src="/assets/images/chatter-box-logo.png" alt='ChatterBox Logo'/>
+      <span class="m-auto chatter-box font-lg">ChatterBox</span>
     </a>
+
   </div>
-  <div favorites="user"> </div>
-  <div class='navbar-area float-right'>
-    <a class='navbar-link' href="#">Login</a>
+  <div class="user-nav-section navbar-area float-right" ng-show="UserService.currentUser">
+    <a class="user-info navbar-link" ui-sref="profile">
+      <span class="user-name navbar-link">{{UserService.currentUser.displayName || UserService.currentUser.email}}</span>
+      <img class="user-profile-image" ng-src="{{UserService.currentUser.photoURL || '/assets/images/profile-default.png'}}" alt="User Profile Picture"/>
+    </a>
+    <button type="button" name="auth-log-out" class='navbar-link btn btn-transparent font-sm' ng-click="UserService.logOut()" ng-show="UserService.currentUser">Log out</button>
+  </div>
+  <div class="user-auth-section navbar-area float-right">
+    <form name="userAuthForm" class="navbar-link"  ng-hide="UserService.currentUser || UserService.loading">
+      <input autofocus type="email" class="s-b-s" name="userEmail" placeholder="Email" required ng-model="auth.email" />
+      <input type="password" class="s-b-s" name="userPassword" placeholder="Password" required ng-model="auth.password"/>
+      <label for="user-keep-logged-in" class="font-sm black-txt m-auto" >Remember me today</label>
+        <input id="user-keep-logged-in" type="checkbox" class="s-b-s" name="userKeepLoggedIn" ng-model="auth.keepMeLoggedIn" ng-init="auth.keepMeLoggedIn=true"/>
+      <input type="submit" name="auth-log-in" class='btn btn-green s-b-s font-sm' ng-click="UserService.logIn($event, auth)" ng-disabled="!userAuthForm.$valid" value="Log in"/>
+      <input type="reset" name="auth-sign-up" class='btn btn-transparent s-b-s font-sm' ng-click="UserService.signUp($event, auth)" ng-disabled="!userAuthForm.$valid" value="Sign up"/>
+    </form>
   </div>
 </navbar>

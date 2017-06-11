@@ -1,7 +1,12 @@
 (function(){
-  function sidebarCtrl($scope, RoomService, $uibModal) {
+  function sidebarCtrl($scope, RoomService, UserService) {
     $scope.RoomService = RoomService;
+    $scope.UserService = UserService;
     $scope.rooms = RoomService.all;
+    $scope.favoritesFirst = (current, next) => {
+      return UserService.userData && UserService.userData.favorites
+        && UserService.userData.favorites.includes(next.value) ? 1 : -1;
+    };
   }
 
   angular
@@ -12,7 +17,7 @@
         scope: {},
         link: function() {},
         templateUrl: '/templates/sidebar.html',
-        controller: ['$scope', 'RoomService', sidebarCtrl],
+        controller: ['$scope', 'RoomService', 'UserService', sidebarCtrl],
         replace: true
       };
     })

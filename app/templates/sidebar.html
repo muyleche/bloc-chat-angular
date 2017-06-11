@@ -1,17 +1,19 @@
 <aside class="sidebar">
-  <input type="text" class="chatroom-search" ng-model="sidebarCtrl.roomQuery" />
-  <ul class="chatrooms"><li ng-repeat="room in rooms | filter:{ name: sidebarCtrl.roomQuery } track by room.$id">
-      <a ui-sref="room({id: '{{room.$id}}'})">{{room.name}}</a>
-      <button class="remove float-right ion-trash-b" ng-click="RoomService.remove(room)"></button>
-    </li>
-    <li ng-init="showChatRoomForm = false">
-      <button class="new-chat-room float-left ion-plus" ng-click="showChatRoomForm=true; newRoom={}" ng-disabled="showChatRoomForm"> New Room</button>
-      <form ng-show="showChatRoomForm" name="chatroomForm" class="new-chatroom-form">
-        <input type="text" name="roomName" class="new-chatroom-name" placeholder="Name" required ng-model="newRoom.name"/>
-        <input type="textarea" name="roomDescription" class="new-chatroom-description" placeholder="Description" ng-model="newRoom.description"/>
-        <input type="submit" name="roomSubmit" class="submit-new-chatroom" ng-click="RoomService.add(newRoom);showChatRoomForm=false" ng-disabled="chatroomForm.roomName.$error.required" value="Save"/>
-        <input type="reset" name="roomReset" class="close-new-chatroom" ng-click="showChatRoomForm=false" ng-show="showChatRoomForm" value="Cancel"/>
-        </form>
+  <input type="text" class="chatroom-search" placeholder="Search chatrooms..." ng-model="sidebarCtrl.roomQuery" />
+  <ul class="chatrooms">
+    <li class="chatroom-item" ng-repeat="room in rooms | filter:{ name: sidebarCtrl.roomQuery } | orderBy:'$id':false:favoritesFirst track by room.$id">
+      <a class="font-md" ui-sref="room({id: '{{room.$id}}'})">{{room.name}}</a>
+      <div class="zero-height-wrapper abs top-right">
+        <button type="button" class="btn icon-only remove float-right ion-trash-b font-md" ng-disabled="!UserService.currentUser" ng-click="RoomService.remove(room)"></button>
+        <button type="button" class="btn icon-only float-right ion-star font-md" ng-disabled="!UserService.currentUser" ng-class="{favorite: UserService.userData.favorites.includes(room.$id)}" ng-click="UserService.toggleFavorite(room.$id)"></button>
+      </div>
     </li>
   </ul>
+  <button type="button" class="new-chatroom btn btn-green float-left ion-plus" ng-click="showChatRoomForm=true;newRoom={}" ng-hide="showChatRoomForm || !UserService.currentUser"> New Room</button>
+  <form ng-show="showChatRoomForm" name="chatroomForm" class="new-chatroom-form">
+    <input type="text" name="roomName" class="new-chatroom-name" placeholder="Chatroom name" required ng-model="newRoom.name"/>
+    <textarea name="roomDescription" rows="3" class="new-chatroom-description" placeholder="Description" ng-model="newRoom.description"></textarea>
+    <input type="submit" name="roomSubmit" class="submit-new-chatroom btn btn-green float-left" ng-click="RoomService.add($event, newRoom);showChatRoomForm=false" ng-disabled="!chatroomForm.$valid" value="Save" />
+    <input type="reset" name="roomReset" class="close-new-chatroom btn btn-red float-right" ng-click="showChatRoomForm=false" value="Cancel" />
+  </form>
 </aside>

@@ -20,8 +20,13 @@
       })
       .state('room', {
         url:'/room/{id:string}',
-        templateUrl: '/templates/chat-room.html',
+        templateUrl: '/templates/chatroom.html',
         controller: 'chatRoomCtrl'
+      })
+      .state('profile', {
+        url: '/profile',
+        templateUrl: '/templates/user-profile.html',
+        controller: 'userProfileCtrl'
       });
   }
 
@@ -37,6 +42,6 @@
 
   // define primary angular module and config.
   angular
-    .module('chatterBox', ['ui.router','firebase'])
+    .module('chatterBox', ['ui.router','firebase', 'ngCookies'])
     .config(config);
 })();
