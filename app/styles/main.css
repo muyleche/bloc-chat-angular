@@ -219,10 +219,6 @@ a:active {
   color: darkgrey;
 }
 
-a:visited {
-  color: darkgrey;
-}
-
 .zero-height-wrapper {
   height: 0px;
   width: 100%;

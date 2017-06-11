@@ -16,12 +16,14 @@
             $cookies.put('email', email);
             $cookies.put('password', password, { expires: thisDate });
           }
-          User.loading = false;
           console.log('logged in as '+user.uid);
           event.target.closest('form').reset();
         })
         .catch((error) => {
           alert('Authentication failed. Verify username and password and try again.');
+        })
+        .finally(() => {
+          User.loading = false;
         });
     };
     User.logInWithCreds = (creds) => {
@@ -30,11 +32,13 @@
         .then((user) => {
           User.currentUser = user;
           getUserData(user.uid);
-          User.loading = false;
           console.log('logged in as '+user.uid);
         })
         .catch((error) => {
           alert('Authentication failed. Verify username and password and try again.');
+        })
+        .finally(() => {
+          User.loading = false;
         });
     };
     User.signUp = (event, options = {email, password, keepMeLoggedIn}) => {
@@ -50,12 +54,14 @@
             $cookies.put('email', email);
             $cookies.put('password', password, { expires: thisDate });
           }
-          User.loading = false;
           console.log('logged in as '+user.uid);
           event.target.closest('form').reset();
         })
         .catch((error) => {
           alert('create user failed.', error);
+        })
+        .finally(() => {
+          User.loading = false;
         });
     };
     User.updateProfile = (event, options = {email, displayName, photoURL}) => {
@@ -76,9 +82,10 @@
         //update user profile info.
         User.currentUser.updateProfile({displayName, photoURL})
           .then(() => {
-            User.currentUser.displayName = displayName;
             console.log("Profile information successfully updated.");
             event.target.closest('form').reset();
+            if (photoURL) User.currentUser.photoURL = photoURL;
+            if (displayName) User.currentUser.displayName = displayName;
           })
           .catch((error) => {
             console.log("Failed to update profile information",error);

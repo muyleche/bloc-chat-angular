@@ -3,18 +3,18 @@
   <form class='user-profile' name="userProfile">
     <div class="stacked-field">
       <label for="userEmail">Email </label>
-      <input id="userEmail" name="userEmail" type="email" ng-model="newEmail" />
+      <input id="userEmail" name="userEmail" type="email" ng-model="profile.email" />
     </div>
     <div class="stacked-field">
       <label for="userName">Name </label>
-      <input id="userName" name="userName" type="text" ng-model="newName" />
+      <input id="userName" name="userName" type="text" ng-model="profile.displayName" />
     </div>
     <div class="stacked-field">
       <label for="userPhoto">Profile Pic </label>
-      <input id="userPhoto" name="userPicture" type="text" ng-model="newPhoto" />
+      <input id="userPhoto" name="userPicture" type="text" ng-model="profile.photoURL" />
     </div>
     <div class="stacked-field">
-      <input type="submit" class="btn s-b-s btn-green" ng-click="UserService.updateProfile($event, profile)" ng-disabled="!newEmail && !newName && !newPhoto" value="Save"/>
+      <input type="submit" class="btn s-b-s btn-green" ng-click="UserService.updateProfile($event, profile)" ng-disabled="!profile.email && !profile.displayName && !profile.photoURL" value="Save"/>
     </div>
   </form>
   <button class="btn btn-grey" ng-click="newAuth={}" ng-show="!newAuth" >Change Password</button>

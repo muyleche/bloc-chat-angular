@@ -4,7 +4,13 @@
     const ref = firebase.database().ref().child('messages'),
           messages = $firebaseArray(ref);
     Messages.all = messages;
-    Messages.add = function (event, message, room) {
+    Messages.add = function (event, message, room, user) {
+      message.author = {
+        uid: user.uid,
+        displayName: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL
+      };
       message.dateSubmitted = (new Date()).valueOf();
       Messages[room.$id].$add(message).then((ref) => {
         console.log("added record with id " + ref.key);

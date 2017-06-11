@@ -3,7 +3,7 @@
   <div class="loading" ng-hide="messages.$resolved"></div>
   <article class="chatroom-message" ng-show="messages.$resolved" ng-repeat="msg in messages | orderBy:'dateSubmitted'">
     <div class="post-info">
-      <img class="author-thumbnail" src="" alt="Author picture" />
+      <img class="author-thumbnail" ng-src="{{msg.author.photoURL || '/assets/images/profile-default.png'}}" alt="Author picture" />
       <div class="author-label">{{msg.author.displayName || msg.author.email}}</div>
       <div class="date-label">{{msg.dateSubmitted | date:"MMM dd - hh:mm a"}}</div>
     </div>
@@ -13,7 +13,7 @@
   </article>
   <div ng-hide="UserService.currentUser">Log in or sign up to contribute to the discussion.</div>
   <form name="new-post-form" ng-show="UserService.currentUser">
-    <textarea rows="3" cols="75" class="" placeholder="Share your thoughts..." ng-model="newMessage.text" ng-init="newMessage.author = { email: UserService.currentUser.email, uid: UserService.currentUser.uid, displayName: UserService.currentUser.displayName}" ></textarea>
-    <input type="submit" class="submit-new-post btn btn-blue s-b-s" ng-click="MessageService.add(newMessage, room)" value="Post"/>
+    <textarea rows="3" cols="75" class="" placeholder="Share your thoughts..." ng-model="newMessage.text" ></textarea>
+    <input type="submit" class="submit-new-post btn btn-blue s-b-s" ng-click="MessageService.add($event, newMessage, room, UserService.currentUser)" value="Post"/>
   </form>
 </main>
