@@ -1,10 +1,19 @@
 (function() {
-  function RoomService ($firebaseArray, $firebaseObject) {
+  function RoomService ($firebaseArray, $firebaseObject, UserDataService) {
     let Rooms = {};
     const ref = firebase.database().ref().child('rooms'),
           rooms = $firebaseArray(ref);
     Rooms.all = rooms;
-    Rooms.add = function (event, item) {
+    Rooms.add = function (event, item, uid) {
+      if (!item.public) {
+        item.members = item.members.split(/[,\n]/g)
+          .reduce((users, val) => {
+            const id = UserDataService.getUserIdFromEmail(val);
+            if (id) users.push(id);
+            return users;
+          }, []);
+        if (!item.members.includes(uid)) item.members.push(uid);
+      }
       rooms.$add(item).then((ref) => {
         console.log("added record with id " + ref.key);
         event.target.closest('form').reset();
@@ -31,5 +40,5 @@
 
   angular
     .module('chatterBox')
-    .factory('RoomService', RoomService);
+    .factory('RoomService', ['$firebaseArray', '$firebaseObject', 'UserDataService', RoomService]);
 })();

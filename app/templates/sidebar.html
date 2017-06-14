@@ -9,11 +9,13 @@
       </div>
     </li>
   </ul>
-  <button type="button" class="new-chatroom btn btn-green float-left ion-plus" ng-click="newRoom={}" ng-hide="showChatRoomForm || !UserService.currentUser"> New Room</button>
+  <button type="button" class="new-chatroom btn btn-green float-left ion-plus" ng-click="newRoom={}" ng-show="!newRoom && UserService.currentUser"> New Room</button>
   <form name="chatroomForm" class="new-chatroom-form" ng-show="newRoom">
     <input type="text" name="roomName" class="new-chatroom-name" placeholder="Chatroom name" required ng-model="newRoom.name"/>
+    <label>Public <input type="checkbox" name="roomPrivate" class="new-chatroom-public" ng-model="newRoom.public" ng-click="newRoom.members = null"/></label>
+    <textarea type="text" name="roomName" class="new-chatroom-name" placeholder="Members..." ng-hide="newRoom.public" ng-model="newRoom.members"></textarea>
     <textarea name="roomDescription" rows="3" class="new-chatroom-description" placeholder="Description" ng-model="newRoom.description"></textarea>
-    <input type="submit" name="roomSubmit" class="submit-new-chatroom btn btn-green float-left" ng-click="RoomService.add($event, newRoom);newRoom=null" ng-disabled="!chatroomForm.$valid" value="Save" />
+    <input type="submit" name="roomSubmit" class="submit-new-chatroom btn btn-green float-left" ng-click="RoomService.add($event, newRoom, UserService.currentUser.uid);newRoom=null" ng-disabled="!chatroomForm.$valid" value="Save" />
     <input type="reset" name="roomReset" class="close-new-chatroom btn btn-red float-right" ng-click="newRoom=null" value="Cancel" />
   </form>
 </aside>

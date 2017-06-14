@@ -3,8 +3,8 @@
   <div class="loading" ng-hide="messages.$resolved"></div>
   <article class="chatroom-message" ng-show="messages.$resolved" ng-repeat="msg in messages | orderBy:'dateSubmitted'">
     <div class="post-info">
-      <img class="author-thumbnail" ng-src="{{msg.author.photoURL || '/assets/images/profile-default.png'}}" alt="Author picture" />
-      <div class="author-label">{{msg.author.displayName || msg.author.email}}</div>
+      <img class="author-thumbnail" ng-src="{{UserDataService[msg.author].photoURL || '/assets/images/profile-default.png'}}" alt="Author picture" />
+      <div class="author-label">{{UserDataService[msg.author].displayName || UserDataService[msg.author].email}}</div>
       <div class="date-label">{{msg.dateSubmitted | date:"MMM dd - hh:mm a"}}</div>
     </div>
     <div class="message-wrapper">

@@ -1,5 +1,5 @@
 (function() {
-  function UserService($cookies, $firebaseAuth, $firebaseObject) {
+  function UserService($cookies, $firebaseAuth, UserDataService) {
     const User = { loading: false },
           authObject = $firebaseAuth();
     User.logIn = (event, options = {email, password, keepMeLoggedIn}) => {
@@ -9,7 +9,7 @@
       authObject.$signInWithCredential(creds)
         .then((user) => {
           User.currentUser = user;
-          getUserData(user.uid);
+          User.userData = UserDataService.get(user);
           const thisDate = new Date();
           thisDate.setDate(thisDate.getDate()+1);
           if (keepMeLoggedIn) {
@@ -20,7 +20,7 @@
           event.target.closest('form').reset();
         })
         .catch((error) => {
-          alert('Authentication failed. Verify username and password and try again.');
+          alert('Authentication failed. Verify username and password and try again.', error);
         })
         .finally(() => {
           User.loading = false;
@@ -31,7 +31,7 @@
       authObject.$signInWithCredential(creds)
         .then((user) => {
           User.currentUser = user;
-          getUserData(user.uid);
+          User.userData = UserDataService.get(user);
           console.log('logged in as '+user.uid);
         })
         .catch((error) => {
@@ -47,7 +47,8 @@
       authObject.$createUserWithEmailAndPassword(email, password)
         .then((user) => {
           User.currentUser = user;
-          getUserData(user.uid);
+          User.userData = UserDataService.get(user);
+          UserDataService.set();
           const thisDate = new Date();
           thisDate.setDate(thisDate.getDate()+1);
           if (keepMeLoggedIn) {
@@ -66,9 +67,11 @@
     };
     User.updateProfile = (event, options = {email, displayName, photoURL}) => {
       if (!User.currentUser) return;
-      const {email, displayName, photoURL} = options;
+      const {email, displayName, photoURL} = options,
+            userId = User.currentUser.uid;
+
       if (email && email !== User.currentUser.email) {
-        //change email here;
+        // change email here
         authObject.$updateEmail(email)
           .then(() => {
             console.log("Profile information successfully updated.");
@@ -78,14 +81,24 @@
             console.log("Failed to update profile information",error);
           });
       }
-      if (displayName !== User.currentUser.displayName || photoURL !== User.currentUser.photoURL) {
-        //update user profile info.
+      if (displayName || photoURL) {
+        // update user profile info.
         User.currentUser.updateProfile({displayName, photoURL})
           .then(() => {
             console.log("Profile information successfully updated.");
             event.target.closest('form').reset();
-            if (photoURL) User.currentUser.photoURL = photoURL;
-            if (displayName) User.currentUser.displayName = displayName;
+            const userDataChanged = false;
+            if (photoURL !== User.userData.photoURL) {
+              User.currentUser.photoURL = photoURL;
+              UserDataService.set(userId, 'photoURL', photoURL);
+              userDataChanged = true;
+            }
+            if (displayName !== User.userData.displayName) {
+              User.currentUser.displayName = displayName;
+              UserDataService.set(userId, 'displayName', displayName);
+              userDataChanged = true;
+            }
+            if (userDataChanged) UserDataService.save(userId);
           })
           .catch((error) => {
             console.log("Failed to update profile information",error);
@@ -117,33 +130,25 @@
     };
     User.logOut = () => {
       if (authObject.$getAuth()) {
+        const userId = User.currentUser.uid;
         authObject.$signOut()
         .then(() => {
-          User.currentUser = null;
-          User.userData.$destroy();
+          UserDataService[userId].$destroy();
+          UserDataService[userId] = null;
           $cookies.remove('email');
           $cookies.remove('password');
+          User.currentUser = null;
         })
         .catch((error) => console.log(error));
       }
     };
-    User.toggleFavorite = (id) => {
-      User.userData.favorites = User.userData.favorites || [];
-      if (User.userData.favorites.includes(id)) User.userData.favorites.splice(User.userData.favorites.indexOf(id),1);
-      else User.userData.favorites = [id].concat(User.userData.favorites);
-      saveUserData();
-    };
-    function saveUserData() {
-      if (!User.userData) getUserData();
-      User.userData.$save();
-    };
-    function getUserData(userId) {
-      if (User.currentUser) {
-        User.userData = $firebaseObject(firebase.database().ref('users/'+userId));
-        if (!User.userData.hasOwnProperty('favorites')) {
-          User.userData.favorites = [];
-        }
-        return User.userData;
+
+    User.toggleFavorite = (roomId) => {
+      const userId = User.currentUser.uid;
+      if (userId) {
+        if (UserDataService[userId].favorites.includes(roomId)) UserDataService[userId].favorites.splice(UserDataService[userId].favorites.indexOf(roomId),1);
+        else UserDataService[userId].favorites = UserDataService[userId].favorites.concat([roomId]);
+        UserDataService.save(userId);
       }
     };
 
@@ -151,5 +156,5 @@
   }
 
   angular.module('chatterBox')
-    .factory('UserService',['$cookies', '$firebaseAuth', '$firebaseObject', UserService]);
+    .factory('UserService',['$cookies', '$firebaseAuth', 'UserDataService', UserService]);
 })();
