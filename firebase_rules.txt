@@ -1,0 +1,35 @@
+{
+  "rules": {
+    "rooms": {
+      "$room_id": {
+        // only members of rooms should be able to see the room info.
+        ".read": "data.child('members/'+auth.uid).exists()",
+        // only administrators of rooms should be able to edit the room info.
+        ".write": "data.child('administrators/'+auth.uid).exists()",
+      }
+  	},
+    "members":{
+      "$room_id": {
+        ".read": true,
+        ".write": true
+      }
+    },
+    "messages": {
+			"$room_id": {
+        // only members of rooms should be able to see and add to the messages for a room.
+        ".read": "root.child('rooms/'+$room_id+'/members/'+auth.uid).exists()",
+      	".write": "root.child('rooms/'+$room_id+'/members/'+auth.uid).exists()"
+      }
+    },
+    "users": {
+      "$uid": {
+        "favorites" : {
+          ".read": "$uid === auth.uid"
+        },
+      ".write": "$uid === auth.uid"
+      }
+    }
+
+  }
+
+}

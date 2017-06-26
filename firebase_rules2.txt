@@ -1,0 +1,78 @@
+{
+  "rules": {
+    "rooms":{
+      "public": {
+        // any logged-in user can create/list public rooms.
+        ".write": "auth != null",
+        ".read": "auth != null",
+        "$room_id": {}
+      },
+      "private": {
+				// any logged-in user can create new private rooms.
+        ".write": "auth != null",
+        "$room_id": {
+          // only invited users can read private room info
+					".read": "root.child('invitations/'+auth.uid).exists()"
+        }
+      }
+    },
+    "members":{
+      // no one may read ALL rooms' members.
+      "$room_id": {
+        // a room member can list the members of the room.
+      	".read": "data.child(auth.uid).exists()",
+        "$user_id": {
+          // only a user can add him/herself as a member of a room.
+          ".write": "auth.uid === $user_id"
+        }
+      }
+    },
+    "invitations": {
+      // no one may read ALL users' invitations.
+      "$user_id": {
+        // only the user may read his/her own room invitations.
+        ".read": "auth.uid === $user_id",
+         "$room_id": {
+           // any logged-in user can invite a user to a room.
+           ".write": "auth != null"
+         }
+      }
+    },
+    "messages": {
+      // no one may list ALL messages.
+			"$room_id": {
+        // only members (invited or joined) of rooms may read and write to the messages for a room.
+        ".read": "root.child('invitations/'+auth.uid).exists()
+        			 || root.child('members/'+$room_id+'/'+auth.uid).exists()",
+        ".write": "root.child('invitations/'+auth.uid).exists()
+        			  || root.child('members/'+$room_id+'/'+auth.uid).exists()"
+      }
+    },
+    "users": {
+      // any logged-in user may list all other public users (necessary to invite other users to private rooms and to display message author details).
+      ".read":"auth != null",
+      "$user_id": {
+        // only the user may write his/her own info.
+      	".write": "$user_id === auth.uid",
+        
+        "email": {},
+        "displayName": {},
+        "photoURL": {}
+      }
+    },
+    "settings": {
+			// no one can list ALL users' settings.
+      "$user_id":{
+        // users may only read/write their own settings.
+        ".read":"$user_id === auth.uid",
+        ".write":"$user_id === auth.uid",
+        
+        "favorites": {},
+        "my_private_rooms": {},
+        "my_public_rooms": {}
+      }
+    }    
+
+  }
+  
+}

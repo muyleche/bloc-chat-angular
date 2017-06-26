@@ -5,11 +5,8 @@
           allUsers = $firebaseArray(ref);
 
     UserData.getUserIdFromEmail = (email) => {
-      let result = "";
-      if (allUsers.$resolved) {
-        for (let val of allUsers) {
-          if (!result && val.email === email) return val.$id;
-        }
+      for (let val of allUsers) {
+        if (val.email === email) return val.$id;
       }
       return "";
     }

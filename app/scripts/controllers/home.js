@@ -1,6 +1,6 @@
 (function() {
   function homeCtrl($scope, RoomService) {
-    $scope.rooms = RoomService.all;
+    $scope.rooms = RoomService.public;
   }
   angular
     .module('chatterBox')

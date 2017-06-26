@@ -1,9 +1,10 @@
 (function() {
   function RoomService ($firebaseArray, $firebaseObject, UserDataService) {
     let Rooms = {};
-    const ref = firebase.database().ref().child('rooms'),
-          rooms = $firebaseArray(ref);
-    Rooms.all = rooms;
+    const ref = firebase.database().ref('rooms'),
+          publicRef = ref.child('public'),
+          privateRef = ref.child('private');
+    Rooms.public = $firebaseArray(publicRef);
     Rooms.add = function (event, item, uid) {
       if (!item.public) {
         item.members = item.members.split(/[,\n]/g)
@@ -30,11 +31,13 @@
         console.log("removed record with id " + ref.key);
       });
     };
-    Rooms.getRoom = function (id) {
-      if (!this[id])
-        this[id] = $firebaseObject(firebase.database().ref('rooms/'+id));
+    Rooms.get = function (id, pub) {
+      if (!this[id]) {
+        this[id] = pub ? $firebaseObject(Rooms.public.child(id))
+                       : $firebaseObject(privateRef.child(id));
+      }
       return this[id];
-    }
+    };
     return Rooms;
   }
 
