@@ -1,5 +1,5 @@
 (function() {
-  function UserService($firebaseObject, $firebaseArray) {
+  function UserDataService($firebaseObject, $firebaseArray) {
     const UserData = { },
           ref = firebase.database().ref().child('users'),
           allUsers = $firebaseArray(ref);
@@ -19,7 +19,7 @@
 
     UserData.get = (user, field) => {
       const userId = user.uid;
-      if (!UserData[userId]) {
+      if (userId && !UserData[userId]) {
         const ref = firebase.database().ref('users/'+userId);
 
         UserData[userId] = $firebaseObject(ref);
@@ -45,5 +45,5 @@
   }
 
   angular.module('chatterBox')
-    .factory('UserDataService',['$firebaseObject', '$firebaseArray', UserService]);
+    .factory('UserDataService',['$firebaseObject', '$firebaseArray', UserDataService]);
 })();

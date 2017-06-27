@@ -1,8 +1,15 @@
 <aside class="sidebar">
   <input type="text" class="chatroom-search" placeholder="Search chatrooms..." ng-model="sidebarCtrl.roomQuery" />
   <ul class="chatrooms">
-    <li class="chatroom-item" ng-repeat="room in rooms | filter:{ name: sidebarCtrl.roomQuery } | orderBy:'$id':false:favoritesFirst track by room.$id">
+    <li class="chatroom-item" ng-repeat="room in publicRooms | filter:{ name: sidebarCtrl.roomQuery } | orderBy:'$id':false:favoritesFirst track by room.$id">
       <a class="font-md" ui-sref="room({id: '{{room.$id}}'})">{{room.name}}</a>
+      <div class="zero-height-wrapper abs top-right">
+        <button type="button" class="btn icon-only remove float-right ion-trash-b font-md" ng-disabled="!UserService.currentUser" ng-click="RoomService.remove(room)"></button>
+        <button type="button" class="btn icon-only float-right ion-star font-md" ng-disabled="!UserService.currentUser" ng-class="{favorite: UserService.userData.favorites.includes(room.$id)}" ng-click="UserService.toggleFavorite(room.$id)"></button>
+      </div>
+    </li>
+    <li class="chatroom-item" ng-repeat="room in privateRooms | filter:{ name: sidebarCtrl.roomQuery } | orderBy:'$id':false:favoritesFirst track by room.$id">
+      <a class="font-md" ui-sref="room({id: '{{room.$id}}', priv: true})">{{room.name}}</a>
       <div class="zero-height-wrapper abs top-right">
         <button type="button" class="btn icon-only remove float-right ion-trash-b font-md" ng-disabled="!UserService.currentUser" ng-click="RoomService.remove(room)"></button>
         <button type="button" class="btn icon-only float-right ion-star font-md" ng-disabled="!UserService.currentUser" ng-class="{favorite: UserService.userData.favorites.includes(room.$id)}" ng-click="UserService.toggleFavorite(room.$id)"></button>
@@ -13,7 +20,7 @@
   <form name="chatroomForm" class="new-chatroom-form" ng-show="newRoom">
     <input type="text" name="roomName" class="new-chatroom-name" placeholder="Chatroom name" required ng-model="newRoom.name"/>
     <label>Public <input type="checkbox" name="roomPrivate" class="new-chatroom-public" ng-model="newRoom.public" ng-click="newRoom.members = null"/></label>
-    <textarea type="text" name="roomName" class="new-chatroom-name" placeholder="Members..." ng-hide="newRoom.public" ng-model="newRoom.members"></textarea>
+    <textarea name="roomInvitees" class="new-chatroom-invitations" placeholder="Invitees..." ng-hide="newRoom.public" ng-model="newRoom.invitations"></textarea>
     <textarea name="roomDescription" rows="3" class="new-chatroom-description" placeholder="Description" ng-model="newRoom.description"></textarea>
     <input type="submit" name="roomSubmit" class="submit-new-chatroom btn btn-green float-left" ng-click="RoomService.add($event, newRoom, UserService.currentUser.uid);newRoom=null" ng-disabled="!chatroomForm.$valid" value="Save" />
     <input type="reset" name="roomReset" class="close-new-chatroom btn btn-red float-right" ng-click="newRoom=null" value="Cancel" />

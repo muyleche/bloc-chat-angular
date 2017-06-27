@@ -1,70 +1,43 @@
 (function() {
-  function UserService($cookies, $firebaseAuth, UserDataService) {
+  function UserService($cookies, $firebaseAuth, $firebaseObject, UserDataService, RoomService) {
     const User = { loading: false },
-          authObject = $firebaseAuth();
+          authObject = $firebaseAuth(),
+          settingsRef = firebase.database().ref('settings');
+
+    User.signUp = (event, options = {email, password, keepMeLoggedIn}) => {
+      const authPromise = authObject.$createUserWithEmailAndPassword(options.email, options.password);
+      finishLogin(authPromise, options.password, keepMeLoggedIn);
+    };
     User.logIn = (event, options = {email, password, keepMeLoggedIn}) => {
-      User.loading = true;
-      const {email, password, keepMeLoggedIn} = options,
-        creds = firebase.auth.EmailAuthProvider.credential(email,password);
-      authObject.$signInWithCredential(creds)
-        .then((user) => {
-          User.currentUser = user;
-          User.userData = UserDataService.get(user);
-          const thisDate = new Date();
-          thisDate.setDate(thisDate.getDate()+1);
-          if (keepMeLoggedIn) {
-            $cookies.put('email', email);
-            $cookies.put('password', password, { expires: thisDate });
-          }
-          console.log('logged in as '+user.uid);
-          event.target.closest('form').reset();
-        })
-        .catch((error) => {
-          alert('Authentication failed. Verify username and password and try again.', error);
-        })
-        .finally(() => {
-          User.loading = false;
-        });
+      const authPromise = authObject.$signInWithEmailAndPassword(options.email, options.password);
+      finishLogin(authPromise, options.password, options.keepMeLoggedIn);
     };
     User.logInWithCreds = (creds) => {
-      User.loading = true;
-      authObject.$signInWithCredential(creds)
-        .then((user) => {
-          User.currentUser = user;
-          User.userData = UserDataService.get(user);
-          console.log('logged in as '+user.uid);
-        })
-        .catch((error) => {
-          alert('Authentication failed. Verify username and password and try again.');
-        })
-        .finally(() => {
-          User.loading = false;
-        });
+      finishLogin(authObject.$signInWithCredential(creds));
     };
-    User.signUp = (event, options = {email, password, keepMeLoggedIn}) => {
+    function finishLogin(authPromise, event, password, keepMeLoggedIn) {
       User.loading = true;
-      const {email, password, keepMeLoggedIn} = options;
-      authObject.$createUserWithEmailAndPassword(email, password)
-        .then((user) => {
-          User.currentUser = user;
-          User.userData = UserDataService.get(user);
-          UserDataService.set();
-          const thisDate = new Date();
-          thisDate.setDate(thisDate.getDate()+1);
-          if (keepMeLoggedIn) {
-            $cookies.put('email', email);
-            $cookies.put('password', password, { expires: thisDate });
-          }
-          console.log('logged in as '+user.uid);
-          event.target.closest('form').reset();
-        })
-        .catch((error) => {
-          alert('create user failed.', error);
-        })
-        .finally(() => {
-          User.loading = false;
-        });
-    };
+      authPromise.then((user) => {
+        User.currentUser = user;
+        User.userData = UserDataService.get(user);
+        User.userSettings = $firebaseObject(settingsRef.child(user.uid));
+        RoomService.getPrivateRooms(User.userSettings);
+        const thisDate = new Date();
+        thisDate.setDate(thisDate.getDate()+1);
+        if (keepMeLoggedIn) {
+          $cookies.put('email', user.email);
+          $cookies.put('password', password, { expires: thisDate });
+        }
+        console.log('logged in as '+user.uid);
+        if (event) event.target.closest('form').reset();
+      })
+      .catch((error) => {
+        alert('Authentication failed. Verify username and password and try again.', error);
+      })
+      .finally(() => {
+        User.loading = false;
+      });
+    }
     User.updateProfile = (event, options = {email, displayName, photoURL}) => {
       if (!User.currentUser) return;
       const {email, displayName, photoURL} = options,
@@ -105,6 +78,7 @@
           });
       }
     };
+
     User.updatePassword = (event, options = {currentPwd, newPwd, confirmPwd}) => {
       if (!User.currentUser) return;
       const {currentPwd, newPwd, confirmPwd} = options;
@@ -128,6 +102,7 @@
           });
       }
     };
+
     User.logOut = () => {
       if (authObject.$getAuth()) {
         const userId = User.currentUser.uid;
@@ -144,6 +119,7 @@
     };
 
     User.toggleFavorite = (roomId) => {
+      if (!User.currentUser) return;
       const userId = User.currentUser.uid;
       if (userId) {
         if (UserDataService[userId].favorites.includes(roomId)) UserDataService[userId].favorites.splice(UserDataService[userId].favorites.indexOf(roomId),1);
@@ -156,5 +132,5 @@
   }
 
   angular.module('chatterBox')
-    .factory('UserService',['$cookies', '$firebaseAuth', 'UserDataService', UserService]);
+    .factory('UserService',['$cookies', '$firebaseAuth', '$firebaseObject', 'UserDataService', 'RoomService', UserService]);
 })();

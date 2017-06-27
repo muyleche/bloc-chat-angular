@@ -2,7 +2,8 @@
   function sidebarCtrl($scope, RoomService, UserService) {
     $scope.RoomService = RoomService;
     $scope.UserService = UserService;
-    $scope.rooms = RoomService.public;
+    $scope.publicRooms = RoomService.public;
+    $scope.privateRooms = RoomService.private;
     $scope.favoritesFirst = (current, next) => {
       return UserService.userData && UserService.userData.favorites
         && UserService.userData.favorites.includes(next.value) ? 1 : -1;
