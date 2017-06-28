@@ -6,20 +6,36 @@
           privateRef = ref.child('private'),
           membersRef = firebase.database().ref('members'),
           invitationsRef = firebase.database().ref('invitations');
-    Rooms.public = $firebaseArray(publicRef);
-    Rooms.private = [];
+    Rooms.allPublic = $firebaseArray(publicRef);
+    Rooms.userRooms = [];
 
-    Rooms.getPrivateRooms = (userSettings, roomId) => {
-      userSettings.$loaded().then(() => {
-        userSettings.my_private_rooms.forEach((item) => {
-          Rooms.private.push($firebaseObject(privateRef.child(item)));
+    Rooms.getPrivateRooms = (invitations) => {
+      invitations.$loaded().then(() => {
+        invitations.forEach((item) => {
+          Rooms.userRooms.push($firebaseObject(privateRef.child(item.$value)));
         });
-      });
+      }).catch((error) => console.log(error));
     };
 
-    Rooms.add = function (event, item, uid) {
+    Rooms.getUserRooms = (userSettings) => {
+      userSettings.$loaded().then(() => {
+        if (userSettings.my_rooms) {
+          userSettings.my_rooms.forEach((item) => {
+            let id = item.$value,
+                room = Rooms[item];
+            if (!room) {
+              room = $firebaseObject(privateRef.child(item)) || $firebaseObject(publicRef.$getRecord(item));
+            }
+            room.removeAllowed = true;
+            Rooms.userRooms.push(room);
+          });
+        }
+      }).catch((error) => console.log(error));
+    };
+
+    Rooms.add = function (event, item, userSettings) {
       if (item.public) {
-        Rooms.public.$add(item).then((ref) => {
+        Rooms.allPublic.$add(item).then((ref) => {
           console.log("added record with id " + ref.key);
           event.target.closest('form').reset();
         });
@@ -31,16 +47,18 @@
             if (id) users.push(id);
             return users;
           }, []);
-        if (!invitations.includes(uid)) invitations.push(uid);
-
+        if (!invitations.includes(userSettings.$id)) invitations.push(userSettings.$id);
         const roomId = privateRef.push().key,
               roomLocation = `/rooms/private/${roomId}`,
               roomInfo = { name: item.name || 'New Room', description: item.description || '' },
               updates = {};
+        userSettings.my_rooms.push(roomId);
+        userSettings.$save();
         updates[roomLocation] = roomInfo;
         firebase.database().ref().update(updates);
-        Rooms.private.push($firebaseObject(firebase.database().ref(roomLocation)));
+        Rooms.userRooms.push($firebaseObject(firebase.database().ref(roomLocation)));
       }
+
       event.target.closest('form').reset();
     };
     Rooms.updateLastMessage = function (room, message) {
@@ -55,10 +73,8 @@
       });
     };
     Rooms.get = function (id, priv) {
-      console.log(id,priv);
       if (!this[id]) {
-        this[id] = priv ? $firebaseObject(privateRef.child(id))
-                        : $firebaseObject(Rooms.public[id]);
+        this[id] = Rooms.public.$getRecord(id) || $firebaseObject(privateRef.child(id));
       }
       return this[id];
     };

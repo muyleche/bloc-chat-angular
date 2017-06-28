@@ -1,16 +1,17 @@
 (function() {
-  function UserService($cookies, $firebaseAuth, $firebaseObject, UserDataService, RoomService) {
+  function UserService($cookies, $firebaseAuth, $firebaseArray, $firebaseObject, UserDataService, RoomService) {
     const User = { loading: false },
           authObject = $firebaseAuth(),
-          settingsRef = firebase.database().ref('settings');
+          settingsRef = firebase.database().ref('settings'),
+          invitationsRef = firebase.database().ref('invitations');
 
     User.signUp = (event, options = {email, password, keepMeLoggedIn}) => {
       const authPromise = authObject.$createUserWithEmailAndPassword(options.email, options.password);
-      finishLogin(authPromise, options.password, keepMeLoggedIn);
+      finishLogin(authPromise, event, options.password, keepMeLoggedIn);
     };
     User.logIn = (event, options = {email, password, keepMeLoggedIn}) => {
       const authPromise = authObject.$signInWithEmailAndPassword(options.email, options.password);
-      finishLogin(authPromise, options.password, options.keepMeLoggedIn);
+      finishLogin(authPromise, event, options.password, options.keepMeLoggedIn);
     };
     User.logInWithCreds = (creds) => {
       finishLogin(authObject.$signInWithCredential(creds));
@@ -21,12 +22,14 @@
         User.currentUser = user;
         User.userData = UserDataService.get(user);
         User.userSettings = $firebaseObject(settingsRef.child(user.uid));
-        RoomService.getPrivateRooms(User.userSettings);
+        User.userInvitations = $firebaseArray(invitationsRef.child(user.uid));
+        RoomService.getPrivateRooms(User.userInvitations);
+        RoomService.getUserRooms(User.userSettings);
         const thisDate = new Date();
         thisDate.setDate(thisDate.getDate()+1);
         if (keepMeLoggedIn) {
-          $cookies.put('email', user.email);
-          $cookies.put('password', password, { expires: thisDate });
+          if (user && user.email) $cookies.put('email', user.email);
+          if (password) $cookies.put('password', password, { expires: thisDate });
         }
         console.log('logged in as '+user.uid);
         if (event) event.target.closest('form').reset();
@@ -132,5 +135,5 @@
   }
 
   angular.module('chatterBox')
-    .factory('UserService',['$cookies', '$firebaseAuth', '$firebaseObject', 'UserDataService', 'RoomService', UserService]);
+    .factory('UserService',['$cookies', '$firebaseAuth', '$firebaseArray', '$firebaseObject', 'UserDataService', 'RoomService', UserService]);
 })();

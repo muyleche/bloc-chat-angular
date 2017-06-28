@@ -1,15 +1,17 @@
 <aside class="sidebar">
   <input type="text" class="chatroom-search" placeholder="Search chatrooms..." ng-model="sidebarCtrl.roomQuery" />
-  <ul class="chatrooms">
-    <li class="chatroom-item" ng-repeat="room in publicRooms | filter:{ name: sidebarCtrl.roomQuery } | orderBy:'$id':false:favoritesFirst track by room.$id">
-      <a class="font-md" ui-sref="room({id: '{{room.$id}}'})">{{room.name}}</a>
+  <ul class="chatrooms" ng-show="userRooms.length">
+    <li class="chatroom-item" ng-repeat="room in userRooms | filter:{ name: sidebarCtrl.roomQuery } | orderBy:'$id':false:favoritesFirst track by room.$id">
+      <a class="font-md" ui-sref="room({id: '{{room.$id}}', priv: true})">{{room.name}}</a>
       <div class="zero-height-wrapper abs top-right">
         <button type="button" class="btn icon-only remove float-right ion-trash-b font-md" ng-disabled="!UserService.currentUser" ng-click="RoomService.remove(room)"></button>
         <button type="button" class="btn icon-only float-right ion-star font-md" ng-disabled="!UserService.currentUser" ng-class="{favorite: UserService.userData.favorites.includes(room.$id)}" ng-click="UserService.toggleFavorite(room.$id)"></button>
       </div>
     </li>
-    <li class="chatroom-item" ng-repeat="room in privateRooms | filter:{ name: sidebarCtrl.roomQuery } | orderBy:'$id':false:favoritesFirst track by room.$id">
-      <a class="font-md" ui-sref="room({id: '{{room.$id}}', priv: true})">{{room.name}}</a>
+  </ul>
+  <ul class="chatrooms">
+    <li class="chatroom-item" ng-repeat="room in publicRooms | filter:{ name: sidebarCtrl.roomQuery } | orderBy:'$id':false:favoritesFirst track by room.$id">
+      <a class="font-md" ui-sref="room({id: '{{room.$id}}'})">{{room.name}}</a>
       <div class="zero-height-wrapper abs top-right">
         <button type="button" class="btn icon-only remove float-right ion-trash-b font-md" ng-disabled="!UserService.currentUser" ng-click="RoomService.remove(room)"></button>
         <button type="button" class="btn icon-only float-right ion-star font-md" ng-disabled="!UserService.currentUser" ng-class="{favorite: UserService.userData.favorites.includes(room.$id)}" ng-click="UserService.toggleFavorite(room.$id)"></button>

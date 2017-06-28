@@ -12,7 +12,8 @@
     </div>
   </article>
   <div ng-hide="UserService.currentUser">Log in or sign up to contribute to the discussion.</div>
-  <form name="new-post-form" ng-show="UserService.currentUser">
+  <div ng-hide="!UserService.currentUser && (!messages.$resolved || messages.allowed)">You do not have permission to access this chatroom.</div>
+  <form name="new-post-form" ng-show="UserService.currentUser && messages.allowed">
     <textarea rows="3" cols="75" class="" placeholder="Share your thoughts..." ng-model="newMessage.text" ></textarea>
     <input type="submit" class="submit-new-post btn btn-blue s-b-s" ng-click="MessageService.add($event, newMessage, room, UserService.currentUser)" value="Post"/>
   </form>
