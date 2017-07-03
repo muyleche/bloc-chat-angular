@@ -5,10 +5,15 @@ body {
 }
 
 body {
+  box-sizing: border-box;
   margin: 0px;
   font-size: 16px;
   font-family: 'Open Sans';
-  padding: 50px 20px 20px 200px;
+  padding: 50px 20px 20px 20px;
+}
+
+.sidebar-space {
+  padding-left: 240px;
 }
 
 .cover {
@@ -68,6 +73,10 @@ ui-view {
 
 .font-xs {
   font-size: 0.5rem;
+}
+
+.center-text {
+  text-align: center;
 }
 
 input[type="text"],
@@ -199,7 +208,8 @@ textarea:focus {
   display: block;
 }
 
-.stacked-field label {
+.stacked-field label,
+.stacked-field span {
   vertical-align: bottom;
   vertical-align: -webkit-baseline-middle;
 }

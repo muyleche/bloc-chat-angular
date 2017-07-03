@@ -1,18 +1,26 @@
-<h1>Feed</h1>
-<div class="loading" ng-hide="rooms.$resolved"></div>
-<section ng-show="rooms.$resolved">
-  <article class="recent-message" ng-repeat="room in rooms | orderBy:{ lastMessage: { dateSubmitted }}:true">
-    <div class="post-info">
-      <div class="room-info">
-        <a class="font-md bold" ui-sref="room({id:'{{room.$id}}'})">{{room.name}}</a>
-        <div class="date-label">{{room.lastMessage.dateSubmitted | date:'short'}}</div>
-      </div>
-    </div>
-    <div class="message-wrapper">
-      <div class="author-label">{{room.lastMessage.author.displayName || room.lastMessage.author.email}}</div>
-      {{room.lastMessage.text}}
-    </div>
-  </article>
-  <footer>
-  </footer>
+<section class="welcome" ng-hide="UserService.currentUser">
+  <header class="center-text"><h1 class="font-xl">Welcome to ChatterBox</h1></header>
+  <main class="center-text">
+    Sign up to join the conversation!
+  </main>
+</section>
+<section class="room-feed sidebar-space" ng-show="UserService.currentUser">
+  <h1 class="font-xl">Feed</h1>
+  <div class="loading" ng-hide="rooms.$resolved"></div>
+  <div class="feed-messages" ng-show="rooms.$resolved">
+    <article class="recent-message" ng-repeat="room in rooms | orderBy:{ lastMessage: { dateSubmitted }}:true">
+      <table>
+        <tr>
+          <td class="room-info">
+            <a class="font-md bold" ui-sref="room({id:'{{room.$id}}'})">{{room.name}}</a>
+            <div class="date-label font-sm">{{room.lastMessage.dateSubmitted | date:'short'}}</div>
+          </td>
+          <td class="message-wrapper">
+            <span class="author-label s-b-s">{{UserDataService.get(room.lastMessage.author, 'displayName') || UserDataService.get(room.lastMessage.author, 'email')}}</span>
+            <span>"{{room.lastMessage.text}}"</span>
+          </td>
+        </tr>
+      </table>
+    </article>
+  </div>
 </section>

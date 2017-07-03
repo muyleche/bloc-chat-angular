@@ -1,39 +1,44 @@
-<div ng-hide="UserService.currentUser">Log in or sign up to edit profile information.</div>
-<main class='user-profile' ng-show="UserService.currentUser">
-  <form class='user-profile' name="userProfile">
-    <div class="stacked-field">
-      <label for="userEmail">Email </label>
-      <input id="userEmail" name="userEmail" type="email" ng-model="profile.email" />
-    </div>
-    <div class="stacked-field">
-      <label for="userName">Name </label>
-      <input id="userName" name="userName" type="text" ng-model="profile.displayName" />
-    </div>
-    <div class="stacked-field">
-      <label for="userPhoto">Profile Pic </label>
-      <input id="userPhoto" name="userPicture" type="text" ng-model="profile.photoURL" />
-    </div>
-    <div class="stacked-field">
-      <input type="submit" class="btn s-b-s btn-green" ng-click="UserService.updateProfile($event, profile)" ng-disabled="!profile.email && !profile.displayName && !profile.photoURL" value="Save"/>
-    </div>
-  </form>
-  <button class="btn btn-grey" ng-click="newAuth={}" ng-show="!newAuth" >Change Password</button>
-  <form class='user-password' name="userProfile" ng-show="UserService.currentUser && newAuth">
-    <div class="stacked-field">
-      <label>Current Password </label>
-      <input id="currentPassword" name="currentPassword" type="password" ng-model="newAuth.currentPwd" />
-    </div>
-    <div class="stacked-field">
-      <label>New Password </label>
-      <input name="newPassword" type="password" ng-model="newAuth.newPwd" />
-    </div>
-    <div class="stacked-field">
-      <label>Confirm New Password </label>
-      <input name="newPasswordConfirm" type="password"  ng-model="newAuth.confirmPwd" />
-    </div>
-    <div class="stacked-field">
-      <input type="submit" class="btn s-b-s btn-green" ng-click="UserService.updatePassword($event, newAuth);newAuth=null" value="Save" />
-      <input type="reset" class="btn s-b-s btn-red" ng-click="newAuth=null" value="Cancel" />
-    </div>
-  </form>
-</main>
+<div class="sidebar-space">
+  <div ng-hide="UserService.currentUser">Log in or sign up to edit profile information.</div>
+  <main class='user-profile' ng-show="UserService.currentUser">
+    <form class='user-profile' name="userProfile">
+      <div class="stacked-field">
+        <label for="userEmail">Email </label>
+        <input id="userEmail" name="userEmail" type="email" ng-model="profile.email" />
+        <span><i>Current: {{UserService.currentUser.email}}</i></span>
+      </div>
+      <div class="stacked-field">
+        <label for="userName">Name </label>
+        <input id="userName" name="userName" type="text" ng-model="profile.displayName" />
+        <span><i>Current: {{UserService.currentUser.displayName || '[blank]'}}</i></span>
+      </div>
+      <div class="stacked-field">
+        <label for="userPhoto">Profile Pic </label>
+        <input id="userPhoto" name="userPicture" type="text" ng-model="profile.photoURL" />
+        <span><i>Current: {{UserService.currentUser.photoURL || '[blank]'}}</i></span>
+      </div>
+      <div class="stacked-field">
+        <input type="submit" class="btn s-b-s btn-green" ng-click="UserService.updateProfile($event, profile)" ng-disabled="!profile.email && !profile.displayName && !profile.photoURL" value="Save"/>
+      </div>
+    </form>
+    <button class="btn btn-grey" ng-click="newAuth={}" ng-show="!newAuth" >Change Password</button>
+    <form class='user-password' name="userProfile" ng-show="UserService.currentUser && newAuth">
+      <div class="stacked-field">
+        <label>Current Password </label>
+        <input id="currentPassword" name="currentPassword" type="password" ng-model="newAuth.currentPwd" />
+      </div>
+      <div class="stacked-field">
+        <label>New Password </label>
+        <input name="newPassword" type="password" ng-model="newAuth.newPwd" />
+      </div>
+      <div class="stacked-field">
+        <label>Confirm New Password </label>
+        <input name="newPasswordConfirm" type="password"  ng-model="newAuth.confirmPwd" />
+      </div>
+      <div class="stacked-field">
+        <input type="submit" class="btn s-b-s btn-green" ng-click="UserService.updatePassword($event, newAuth);newAuth=null" value="Save" />
+        <input type="reset" class="btn s-b-s btn-red" ng-click="newAuth=null" value="Cancel" />
+      </div>
+    </form>
+  </main>
+</div>

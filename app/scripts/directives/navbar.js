@@ -1,9 +1,6 @@
 (function() {
-  function navbarCtrl($scope, UserService, $firebaseArray) {
-    let RoomService
+  function navbarCtrl($scope, UserService) {
     $scope.UserService = UserService;
-    $scope.favorites ;
-    $scope.$watch
   }
 
   angular
@@ -15,7 +12,7 @@
         link: function() {},
         replace: true,
         templateUrl: '/templates/navbar.html',
-        controller: ['$scope', 'UserService', '$firebaseArray', navbarCtrl]
+        controller: ['$scope', 'UserService', navbarCtrl]
       };
     });
 })();

@@ -1,46 +1,74 @@
 (function() {
   function UserDataService($firebaseObject, $firebaseArray) {
     const UserData = { },
-          ref = firebase.database().ref().child('users'),
-          allUsers = $firebaseArray(ref);
+          ref = firebase.database().ref().child('users');
+    let allUsers = $firebaseArray(ref);
 
-    UserData.getUserIdFromEmail = (email) => {
+    UserData.init = function (user) {
+      if (user) {
+        let settings = $firebaseObject(firebase.database().ref('/users/'+user.uid));
+        settings.$loaded()
+          .then((data) => {
+            data.$save();
+            data.displayName = user.displayName;
+            data.photoURL = user.photoURL;
+            data.email = user.email;
+            data.$save();
+            allUsers = allUsers || $firebaseArray(ref);
+            console.log("The user's info was saved");
+          });
+      }
+    };
+
+    UserData.getUserIdFromEmail = function (email) {
       for (let val of allUsers) {
         if (val.email === email) return val.$id;
       }
       return "";
     }
 
-    UserData.set = (userId, field, value) => {
-      if (UserData[userId]) {
-        UserData[userId][field] = value;
+    UserData.set = function (userId, field, value) {
+      if (allUsers) {
+        const data = allUsers.$getRecord(userId);
+        if (data) data[field] = value;
       }
     };
 
-    UserData.get = (user, field) => {
-      const userId = user.uid;
-      if (userId && !UserData[userId]) {
-        const ref = firebase.database().ref('users/'+userId);
-
-        UserData[userId] = $firebaseObject(ref);
-        // ensure primary userData fields exist.
-        UserData[userId].favorites = UserData[userId].favorites || [];
-        UserData[userId].displayName = UserData[userId].displayName || user.displayName || "";
-        UserData[userId].photoURL = UserData[userId].photoURL || user.photoURL || "/assets/images/profile-default.png";
-        UserData[userId].email = UserData[userId].email || user.email || "";
-        UserData.save(userId);
+    UserData.get = function (userId, field) {
+      if (allUsers && allUsers.$resolved) {
+        const data = allUsers.$getRecord(userId);
+        if (data) {
+          if (field) return data[field];
+          else return data;
+        }
+        else {
+          return $firebaseObject(firebase.database().ref('/users/'+userId));
+        }
       }
-      if (field == null) return UserData[userId];
-      else return UserData[userId][field];
+      else {
+        console.log(Error("There was an issue retrieving info for "+userId));
+      }
     };
 
-    UserData.save = (userId) => {
-      if (UserData[userId]) UserData[userId].$save()
-        .then(() => {
-          console.log(`${userId}'s data saved.`);
-        });
+    UserData.save = function (userId) {
+      if (allUsers) {
+        const data = allUsers.$getRecord(userId);
+        data.$save()
+          .then(() => {
+            console.log(`${userId}'s data saved.`);
+          })
+          .catch((error) => console.log(`Failed to save ${userId}'s data.`));
+      }
     };
 
+    UserData.reset = function () {
+      if (allUsers) {
+        allUsers.$destroy();
+        allUsers = null;
+      }
+    };
+
+    UserData.init();
     return UserData;
   }
 

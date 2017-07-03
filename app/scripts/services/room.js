@@ -6,85 +6,165 @@
           privateRef = ref.child('private'),
           membersRef = firebase.database().ref('members'),
           invitationsRef = firebase.database().ref('invitations');
-    Rooms.allPublic = $firebaseArray(publicRef);
-    Rooms.userRooms = [];
 
-    Rooms.getPrivateRooms = (invitations) => {
+    this.userRooms = [];
+
+    /**
+     * @function Initialize the public and private room lists.
+     */
+    Rooms.init = function () {
+      this.allPublic = this.allPublic || $firebaseArray(publicRef);
+      this.userRooms = this.userRooms || [];
+    };
+
+    /**
+     * @function Retrieves the private rooms to which the currently logged-in user has access.
+     * @param  {$firebaseObject} invitations The currently logged-in user's invitations.
+     */
+    Rooms.getPrivateRooms = function (invitations) {
       invitations.$loaded().then(() => {
-        invitations.forEach((item) => {
-          Rooms.userRooms.push($firebaseObject(privateRef.child(item.$value)));
+        invitations.forEach((item, index) => {
+          this.get(index);
         });
       }).catch((error) => console.log(error));
     };
 
-    Rooms.getUserRooms = (userSettings) => {
+    /**
+     * @function Get the rooms this user created.
+     * @param  {$firebaseObject} userSettings The currently logged in user's settings.
+     */
+    Rooms.getUserRooms = function (userSettings) {
       userSettings.$loaded().then(() => {
-        if (userSettings.my_rooms) {
-          userSettings.my_rooms.forEach((item) => {
-            let id = item.$value,
-                room = Rooms[item];
-            if (!room) {
-              room = $firebaseObject(privateRef.child(item)) || $firebaseObject(publicRef.$getRecord(item));
-            }
-            room.removeAllowed = true;
-            Rooms.userRooms.push(room);
-          });
+        for (let item in userSettings.my_rooms) {
+          this.get(item);
         }
       }).catch((error) => console.log(error));
     };
 
-    Rooms.add = function (event, item, userSettings) {
-      if (item.public) {
-        Rooms.allPublic.$add(item).then((ref) => {
-          console.log("added record with id " + ref.key);
-          event.target.closest('form').reset();
-        });
+    /**
+     * @function Add a new room object.
+     * @param  {JavaScriptEventObject} event DOM event if this function was triggered from the DOM.
+     * @param  {room} room    The room data to save.
+     * @param  {$firebaseObject} userSettings The currently logged in user's settings.
+     */
+    Rooms.add = function (event, room, userSettings) {
+      let roomId, roomInfo, roomLocation, updates = {};
+      room.name = room.name || 'New Room';
+      room.description = room.description || "";
+      room.public = !!room.public
+      if (room.public) {
+        roomId = publicRef.push().key;
+        roomLocation = `/rooms/public/${roomId}`;
       }
       else {
-        let invitations = item.invitations.split(/[,\n]/g)
-          .reduce((users, val) => {
+        roomId = privateRef.push().key;
+        room.invitations.split(/[,\n]/g).map((val) => {
             const id = UserDataService.getUserIdFromEmail(val);
-            if (id) users.push(id);
-            return users;
-          }, []);
-        if (!invitations.includes(userSettings.$id)) invitations.push(userSettings.$id);
-        const roomId = privateRef.push().key,
-              roomLocation = `/rooms/private/${roomId}`,
-              roomInfo = { name: item.name || 'New Room', description: item.description || '' },
-              updates = {};
-        userSettings.my_rooms.push(roomId);
-        userSettings.$save();
-        updates[roomLocation] = roomInfo;
-        firebase.database().ref().update(updates);
-        Rooms.userRooms.push($firebaseObject(firebase.database().ref(roomLocation)));
+            if (id) updates[`/invitations/${id}/${roomId}`] = "";
+          });
+        roomLocation = `/rooms/private/${roomId}`;
+      }
+      // update room and members/invitations.
+      updates[roomLocation] = { name: room.name, description: room.description, public: room.public };
+      firebase.database().ref().update(updates);
+
+      // add room to user's room list.
+      if (!userSettings.my_rooms) userSettings.my_rooms = {};
+      userSettings.my_rooms[roomId] = "";
+      userSettings.$save();
+      this.userRooms.push($firebaseObject(firebase.database().ref(roomLocation)));
+
+      console.log("Added record with id", roomId);
+      if (event) event.target.closest('form').reset();
+    };
+
+    /**
+     * @function Sets the 'lastMessage' property on a room object.
+     * @param  {$firebaseObject} room    The room object to update.
+     * @param  {object} message The message object.
+     */
+    Rooms.updateLastMessage = function (room, message, rooms) {
+      room.lastMessage = message;
+      console.log(room, message, rooms);
+      if (room.$save) {
+        room.$save().then((ref) => {
+          console.log("Saved record with id", ref.key);
+        });
+      }
+      else if (this.allPublic) {
+        this.allPublic.$save(room);
+      }
+    };
+
+    /**
+     * @function Deletes the chatroom entry in the firebase array and relevant local arrays.
+     * @param  {$firebaseObject} room The room to delete.
+     */
+    Rooms.remove = function (room) {
+      let removal;
+      if (room instanceof $firebaseObject) {
+        removal = room.$remove();
+      }
+      else if (room) {
+        removal = Rooms.allPublic.$remove(room);
       }
 
-      event.target.closest('form').reset();
-    };
-    Rooms.updateLastMessage = function (room, message) {
-      room.lastMessage = message;
-      room.$save().then((ref) => {
-        console.log("saved record with id " + ref.key);
-      });
-    };
-    Rooms.remove = function (item) {
-      rooms.$remove(item).then((ref) => {
-        console.log("removed record with id " + ref.key);
-      });
-    };
-    Rooms.get = function (id, priv) {
-      if (!this[id]) {
-        this[id] = Rooms.public.$getRecord(id) || $firebaseObject(privateRef.child(id));
+      if (removal) {
+        removal.then((ref) => {
+          if (this.userRooms.includes(room)) this.userRooms.splice(this.userRooms.indexOf(room),1);
+          console.log("removed record with id", ref.key);
+        });
       }
-      return this[id];
+      else console.log("This room was not of a recognized type", room);
     };
-    Rooms.joinRoom = function (userId, roomId) {
-      let memberObject = $firebaseObject(membersRef.child(roomId+'/'+userId));
-      memberObject.$loaded().then(function() {
-        Rooms[roomId] = $firebaseObject(privateRef.child(roomId));
-        console.log(Rooms[roomId]);
-      });
+
+    /**
+     * @function Retrieve a firebase object (or object from a firebase array) representing the chatroom with the provided id.
+     * @param  {Number} id The id number of the chatroom.
+     */
+    Rooms.get = function (id) {
+      let room = null;
+      if (!this.userRooms || !this.allPublic) return;
+      // existing room.
+      for (room of this.userRooms) {
+        if (room.$id === id) return room;
+      }
+
+      // existing public room.
+      room = this.allPublic.$getRecord(id);
+
+      // new private room.
+      room = room || $firebaseObject(privateRef.child(id));
+      if (room instanceof $firebaseObject) {
+        room.$loaded().then((data) => {
+          let index = -1, i;
+          for (i = 0; i < this.userRooms.length; i++) {
+            if (this.userRooms[i].$id === data.$id) index = i;
+          }
+          if (data.$value == null && data.name == null) {
+            if (index >= 0) this.userRooms.splice(index,1);
+            data.$destroy();
+          }
+          else if (index < 0) this.userRooms.push(data);
+        });
+      }
+
+      return room;
     };
+
+    /**
+     * @function Empty the room arrays, both public and private.
+     */
+    Rooms.reset = function () {
+      for (let room, i = 0; i < this.userRooms.length; i++) {
+        room = this.userRooms.shift();
+        room.$destroy();
+        i--;
+      }
+      this.allPublic.$destroy();
+      this.allPublic = null;
+    };
+
     return Rooms;
   }
 

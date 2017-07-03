@@ -10,12 +10,15 @@ article:first-of-type.recent-message {
 }
 
 .post-info {
-  display: inline-block;
   border-right: 1px solid rgba(50,50,50, 0.75);
   font-size: 0.75rem;
   height: 100%;
   width: 100px;
   padding: 0.5rem;
+}
+
+.post-info > p {
+  margin: 0;
 }
 
 .recent-message {
@@ -28,16 +31,14 @@ article:first-of-type.recent-message {
 }
 
 .author-label {
-  display: inline-block;
   vertical-align: top;
 }
 
 .recent-message .author-label {
-  display: block;
   font-style: italic;
 }
 .recent-message .author-label:after {
-  content: ':';
+  content: ': ';
 }
 
 .author-thumbnail {
@@ -46,9 +47,13 @@ article:first-of-type.recent-message {
 }
 
 .message-wrapper {
-  padding: 5px;
-  display: inline-block;
+  padding: 5px 10px;
   vertical-align: top;
+  font-size: 14px;
+}
+
+.message-wrapper > p {
+  margin: 0;
 }
 
 form[name="new-post-form"] {

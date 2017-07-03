@@ -4,7 +4,6 @@
       <img class="logo" src="/assets/images/chatter-box-logo.png" alt='ChatterBox Logo'/>
       <span class="m-auto chatter-box font-lg">ChatterBox</span>
     </a>
-
   </div>
   <div class="user-nav-section navbar-area float-right" ng-show="UserService.currentUser">
     <a class="user-info navbar-link" ui-sref="profile">
@@ -15,10 +14,11 @@
   </div>
   <div class="user-auth-section navbar-area float-right">
     <form name="userAuthForm" class="navbar-link"  ng-hide="UserService.currentUser || UserService.loading">
-      <input autofocus type="email" class="s-b-s" name="userEmail" placeholder="Email" required ng-model="auth.email" />
+      <label for="user-keep-logged-in" class="font-sm black-txt s-b-s m-auto" >
+        Remember me
+        <input id="user-remember-me" type="checkbox" class="s-b-s" name="userRememberMe" ng-model="auth.rememberMe" ng-init="auth.rememberMe = true"/>
+      </label><input autofocus type="email" class="s-b-s" name="userEmail" placeholder="Email" required ng-init="auth.email = UserService.remembered" ng-model="auth.email" />
       <input type="password" class="s-b-s" name="userPassword" placeholder="Password" required ng-model="auth.password"/>
-      <label for="user-keep-logged-in" class="font-sm black-txt m-auto" >Remember me today</label>
-        <input id="user-keep-logged-in" type="checkbox" class="s-b-s" name="userKeepLoggedIn" ng-model="auth.keepMeLoggedIn" ng-init="auth.keepMeLoggedIn=true"/>
       <input type="submit" name="auth-log-in" class='btn btn-green s-b-s font-sm' ng-click="UserService.logIn($event, auth)" ng-disabled="!userAuthForm.$valid" value="Log in"/>
       <input type="reset" name="auth-sign-up" class='btn btn-transparent s-b-s font-sm' ng-click="UserService.signUp($event, auth)" ng-disabled="!userAuthForm.$valid" value="Sign up"/>
     </form>
