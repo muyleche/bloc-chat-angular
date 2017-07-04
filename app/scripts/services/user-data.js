@@ -48,12 +48,14 @@
 
     UserData.save = function (userId) {
       if (allUsers) {
-        const data = allUsers.$getRecord(userId);
-        data.$save()
-          .then(() => {
-            console.log(`${userId}'s data saved.`);
-          })
-          .catch((error) => console.log(`Failed to save ${userId}'s data.`));
+        const index = allUsers.$indexFor(userId);
+        if (index >= 0) {
+          allUsers.$save(index)
+            .then(() => {
+              console.log("The user's info was saved.");
+            })
+            .catch((error) => console.log(`Failed to save ${userId}'s data.`));
+        }
       }
     };
 
