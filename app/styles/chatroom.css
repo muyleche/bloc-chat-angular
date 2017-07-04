@@ -9,6 +9,10 @@ article:first-of-type.recent-message {
   border-top: 1px solid rgba(50,50,50, 0.75);
 }
 
+.room-info {
+  width: 100px;
+}
+
 .post-info {
   border-right: 1px solid rgba(50,50,50, 0.75);
   font-size: 0.75rem;

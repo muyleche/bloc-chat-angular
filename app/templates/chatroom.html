@@ -6,7 +6,7 @@
       <tr>
         <td class="post-info">
           <img class="author-thumbnail" ng-src="{{UserDataService.get(msg.author).photoURL || '/assets/images/profile-default.png'}}" alt="Author picture" />
-          <p class="author-label">{{UserDataService.get(msg.author, 'displayName') || UserDataService.get(msg.author, 'email')}}</p>
+          <p class="author-label">{{UserDataService.get(room.lastMessage.author).displayName || UserDataService.get(room.lastMessage.author).email}}</p>
           <p class="date-label">{{msg.dateSubmitted | date:"MMM dd - hh:mm a"}}</p>
         </td>
         <td class="message-wrapper">

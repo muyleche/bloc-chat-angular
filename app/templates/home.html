@@ -6,9 +6,9 @@
 </section>
 <section class="room-feed sidebar-space" ng-show="UserService.currentUser">
   <h1 class="font-xl">Feed</h1>
-  <div class="loading" ng-hide="rooms.$resolved"></div>
-  <div class="feed-messages" ng-show="rooms.$resolved">
-    <article class="recent-message" ng-repeat="room in rooms | orderBy:{ lastMessage: { dateSubmitted }}:true">
+  <div class="loading" ng-hide="RoomService.allPublic.$resolved"></div>
+  <div class="feed-messages" ng-show="RoomService.allPublic.$resolved">
+    <article class="recent-message" ng-if="room.lastMessage" ng-repeat="room in RoomService.allPublic | orderBy:{ lastMessage: { dateSubmitted }}:true">
       <table>
         <tr>
           <td class="room-info">
@@ -16,7 +16,7 @@
             <div class="date-label font-sm">{{room.lastMessage.dateSubmitted | date:'short'}}</div>
           </td>
           <td class="message-wrapper">
-            <span class="author-label s-b-s">{{UserDataService.get(room.lastMessage.author, 'displayName') || UserDataService.get(room.lastMessage.author, 'email')}}</span>
+            <span class="author-label s-b-s">{{UserDataService.get(room.lastMessage.author).displayName || UserDataService.get(room.lastMessage.author).email}}</span>
             <span>"{{room.lastMessage.text}}"</span>
           </td>
         </tr>

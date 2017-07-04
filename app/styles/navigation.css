@@ -48,7 +48,8 @@ li.chatroom-item button.favorite {
 }
 
 input[name="roomName"],
-textarea[name="roomDescription"] {
+textarea[name="roomDescription"],
+textarea[name="roomInvitees"] {
   box-sizing: border-box;
   width: 100%;
 }

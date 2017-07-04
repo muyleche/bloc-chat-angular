@@ -34,20 +34,16 @@
       }
     };
 
-    UserData.get = function (userId, field) {
-      if (allUsers && allUsers.$resolved) {
-        const data = allUsers.$getRecord(userId);
-        if (data) {
-          if (field) return data[field];
-          else return data;
+    UserData.get = function (userId) {
+      if (!this[userId]) {
+        if (allUsers && allUsers.$resolved) {
+          this[userId] = allUsers.$getRecord(userId) || $firebaseObject(firebase.database().ref('/users/'+userId));
         }
         else {
-          return $firebaseObject(firebase.database().ref('/users/'+userId));
+          console.log(Error("There was an issue retrieving info for "+userId));
         }
       }
-      else {
-        console.log(Error("There was an issue retrieving info for "+userId));
-      }
+      if (this[userId]) return this[userId];
     };
 
     UserData.save = function (userId) {

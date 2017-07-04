@@ -51,19 +51,17 @@
       let roomId, roomInfo, roomLocation, updates = {};
       room.name = room.name || 'New Room';
       room.description = room.description || "";
-      room.public = !!room.public
-      if (room.public) {
-        roomId = publicRef.push().key;
-        roomLocation = `/rooms/public/${roomId}`;
-      }
-      else {
-        roomId = privateRef.push().key;
-        room.invitations.split(/[,\n]/g).map((val) => {
-            const id = UserDataService.getUserIdFromEmail(val);
-            if (id) updates[`/invitations/${id}/${roomId}`] = "";
-          });
-        roomLocation = `/rooms/private/${roomId}`;
-      }
+      room.public = !!room.public;
+      
+      roomId = room.public ? publicRef.push().key : privateRef.push().key;
+      roomLocation = room.public ? `/rooms/public/${roomId}` : `/rooms/private/${roomId}`;
+
+      // add invitees to room.
+      room.invitations.split(/[,\n]/g).map((val) => {
+          const id = UserDataService.getUserIdFromEmail(val);
+          if (id) updates[`/invitations/${id}/${roomId}`] = "";
+        });
+
       // update room and members/invitations.
       updates[roomLocation] = { name: room.name, description: room.description, public: room.public };
       firebase.database().ref().update(updates);

@@ -1,13 +1,16 @@
 (function() {
   function chatRoomCtrl($scope, $state, $stateParams, MessageService, RoomService, UserService, UserDataService) {
-    $scope.MessageService = MessageService;
-    $scope.UserService = UserService;
     if (!UserService.currentUser) {
       $state.go('home');
       return;
     }
+    const id = $stateParams.id;
+
+    $scope.MessageService = MessageService;
+    $scope.UserService = UserService;
     $scope.UserDataService = UserDataService;
-    $scope.room = RoomService.get($stateParams.id);
+    $scope.room = RoomService.get(id);
+
     if ($scope.room.public) {
       let updates = { };
       updates['/members/'+$stateParams.id+'/'+UserService.currentUser.uid] = "";
@@ -20,13 +23,6 @@
       $scope.messages = MessageService.get($stateParams.id);
     }
 
-    $scope.$watch(() => UserService.currentUser,
-      (nextVal) => {
-        if (nextVal) {
-          $scope.room = RoomService.get($stateParams.id);
-          $scope.messages = MessageService.get($stateParams.id);
-        }
-      });
   }
 
   angular.module('chatterBox')

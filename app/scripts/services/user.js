@@ -138,13 +138,11 @@
 
     User.toggleFavorite = function (roomId) {
       if (!this.currentUser) return;
-      const userId = this.currentUser.uid;
-      if (userId) {
-        console.log(this.userSettings);
-        if (this.userSettings && this.userSettings.favorites.includes(roomId))
-          this.userSettings.favorites.splice(this.userSettings.favorites.indexOf(roomId),1);
+      if (this.userSettings) {
+        if (!this.userSettings.favorites) this.userSettings.favorites = [];
+        if (this.userSettings.favorites.includes(roomId)) this.userSettings.favorites.splice(this.userSettings.favorites.indexOf(roomId),1);
         else this.userSettings.favorites = this.userSettings.favorites.concat([roomId]);
-        UserDataService.save(userId);
+        UserDataService.save(this.currentUser.uid);
       }
     };
 
