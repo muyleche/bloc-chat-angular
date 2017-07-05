@@ -2,3 +2,8 @@ main.user-profile {
   display: block;
   padding: 0 0 15px;
 }
+
+form.user-profile,
+form.user-password {
+  display: inline-block;
+}

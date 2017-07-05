@@ -4,23 +4,17 @@
       $state.go('home');
       return;
     }
-    const id = $stateParams.id;
-
+    $scope.id = $stateParams.id;
     $scope.MessageService = MessageService;
     $scope.UserService = UserService;
     $scope.UserDataService = UserDataService;
-    $scope.room = RoomService.get(id);
+    $scope.room = RoomService.get($scope.id);
+
 
     if ($scope.room.public) {
       let updates = { };
-      updates['/members/'+$stateParams.id+'/'+UserService.currentUser.uid] = "";
-      firebase.database().ref().update(updates)
-        .then((data) => {
-          $scope.messages = MessageService.get($stateParams.id);
-        });
-    }
-    else {
-      $scope.messages = MessageService.get($stateParams.id);
+      updates['/members/'+$scope.id+'/'+UserService.currentUser.uid] = "";
+      firebase.database().ref().update(updates);
     }
 
   }

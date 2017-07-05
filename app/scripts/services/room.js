@@ -47,12 +47,13 @@
      * @param  {room} room    The room data to save.
      * @param  {$firebaseObject} userSettings The currently logged in user's settings.
      */
-    Rooms.add = function (event, room, userSettings) {
+    Rooms.add = function (room, userSettings) {
       let roomId, roomInfo, roomLocation, updates = {};
       room.name = room.name || 'New Room';
       room.description = room.description || "";
+      room.invitations = room.invitations || "";
       room.public = !!room.public;
-      
+
       roomId = room.public ? publicRef.push().key : privateRef.push().key;
       roomLocation = room.public ? `/rooms/public/${roomId}` : `/rooms/private/${roomId}`;
 
@@ -64,7 +65,7 @@
 
       // update room and members/invitations.
       updates[roomLocation] = { name: room.name, description: room.description, public: room.public };
-      firebase.database().ref().update(updates);
+      let results = firebase.database().ref().update(updates);
 
       // add room to user's room list.
       if (!userSettings.my_rooms) userSettings.my_rooms = {};
@@ -73,7 +74,7 @@
       this.userRooms.push($firebaseObject(firebase.database().ref(roomLocation)));
 
       console.log("Added record with id", roomId);
-      if (event) event.target.closest('form').reset();
+      return results;
     };
 
     /**
@@ -83,7 +84,6 @@
      */
     Rooms.updateLastMessage = function (room, message, rooms) {
       room.lastMessage = message;
-      console.log(room, message, rooms);
       if (room.$save) {
         room.$save().then((ref) => {
           console.log("Saved record with id", ref.key);

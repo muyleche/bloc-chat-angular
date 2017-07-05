@@ -7,26 +7,26 @@
 
     User.remembered = $cookies.get('email') || '';
 
-    User.signUp = function (event, options = {email, password, rememberMe}) {
+    User.signUp = function (options = {email, password, rememberMe}) {
       const authPromise = authObject.$createUserWithEmailAndPassword(options.email, options.password);
-      finishLogin(authPromise, event, options.password, options.rememberMe);
+      return finishLogin(authPromise, options.password, options.rememberMe);
     };
 
-    User.logIn = function (event, options = {email, password, rememberMe}) {
+    User.logIn = function (options = {email, password, rememberMe}) {
       const authPromise = authObject.$signInWithEmailAndPassword(options.email, options.password);
-      finishLogin(authPromise, event, options.password, options.rememberMe);
+      return finishLogin(authPromise, options.password, options.rememberMe);
     };
 
     User.logInWithCreds = function (creds) {
       finishLogin(authObject.$signInWithCredential(creds));
     };
 
-    function finishLogin(authPromise, event, password, rememberMe) {
+    function finishLogin(authPromise, password, rememberMe) {
       User.loading = true;
       return authPromise.then((user) => {
         User.currentUser = user;
         UserDataService.init(user);
-        User.userData = UserDataService.get(user.uid);
+        UserDataService.waitForAllUsers().then(() => {User.userData = UserDataService.get(user.uid);});
         User.userSettings = $firebaseObject(settingsRef.child(user.uid));
         User.userInvitations = $firebaseObject(invitationsRef.child(user.uid));
         RoomService.init();
@@ -46,7 +46,6 @@
       })
       .finally(() => {
         User.loading = false;
-        if (event) event.target.closest('form').reset();
       });
     }
 
@@ -70,20 +69,20 @@
         // update user profile info.
         this.currentUser.updateProfile({displayName, photoURL})
           .then(() => {
-            console.log("Profile information successfully updated.");
-            event.target.closest('form').reset();
             let userDataChanged = false;
-            if (photoURL !== this.userData.photoURL) {
+            if (photoURL) {
               this.currentUser.photoURL = photoURL;
               UserDataService.set(userId, 'photoURL', photoURL);
               userDataChanged = true;
             }
-            if (displayName !== this.userData.displayName) {
+            if (displayName) {
               this.currentUser.displayName = displayName;
               UserDataService.set(userId, 'displayName', displayName);
               userDataChanged = true;
             }
             if (userDataChanged) UserDataService.save(userId);
+            console.log("Profile information successfully updated.");
+            event.target.closest('form').reset();
           })
           .catch((error) => {
             console.log("Failed to update profile information",error);
@@ -122,9 +121,9 @@
         authObject.$signOut()
           .then(() => {
             $cookies.remove('email');
-            this.currentUser = null;
             this.userSettings.$destroy();
             this.userInvitations.$destroy();
+            this.currentUser = null;
             this.userSettings = null;
             this.userInvitations = null;
             RoomService.reset();
@@ -137,12 +136,13 @@
     };
 
     User.toggleFavorite = function (roomId) {
-      if (!this.currentUser) return;
       if (this.userSettings) {
         if (!this.userSettings.favorites) this.userSettings.favorites = [];
         if (this.userSettings.favorites.includes(roomId)) this.userSettings.favorites.splice(this.userSettings.favorites.indexOf(roomId),1);
         else this.userSettings.favorites = this.userSettings.favorites.concat([roomId]);
-        UserDataService.save(this.currentUser.uid);
+        this.userSettings.$save()
+          .then(() => console.log("The user's favorites saved."))
+          .catch((error) => console.log("Failed to save the user's favorites.", error));
       }
     };
 

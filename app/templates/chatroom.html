@@ -1,12 +1,12 @@
 <main class="chatroom sidebar-space">
   <h1>{{room.name}}</h1>
-  <div class="loading" ng-hide="messages.$resolved"></div>
-  <article class="chatroom-message" ng-show="messages.$resolved" ng-repeat="msg in messages | orderBy:'dateSubmitted'">
+  <div class="loading" ng-hide="MessageService.get(id).$resolved"></div>
+  <article class="chatroom-message" ng-show="MessageService.get(id).$resolved" ng-repeat="msg in MessageService.get(id) | orderBy:'dateSubmitted'">
     <table>
       <tr>
         <td class="post-info">
           <img class="author-thumbnail" ng-src="{{UserDataService.get(msg.author).photoURL || '/assets/images/profile-default.png'}}" alt="Author picture" />
-          <p class="author-label">{{UserDataService.get(room.lastMessage.author).displayName || UserDataService.get(room.lastMessage.author).email}}</p>
+          <p class="author-label">{{UserDataService.get(msg.author).displayName || UserDataService.get(msg.author).email}}</p>
           <p class="date-label">{{msg.dateSubmitted | date:"MMM dd - hh:mm a"}}</p>
         </td>
         <td class="message-wrapper">
@@ -16,9 +16,9 @@
     </table>
   </article>
   <div ng-hide="UserService.currentUser">Log in or sign up to contribute to the discussion.</div>
-  <div ng-show="UserService.currentUser && (!messages || !messages.$resolved || !messages.allowed)">You do not have permission to access this chatroom.</div>
-  <form name="new-post-form" ng-show="UserService.currentUser && messages.allowed">
-    <textarea rows="3" cols="75" class="" placeholder="Share your thoughts..." ng-model="newMessage.text" ></textarea>
-    <input type="submit" class="submit-new-post btn btn-blue s-b-s" ng-click="MessageService.add($event, newMessage, room, UserService.currentUser)" value="Post"/>
+  <div ng-show="UserService.currentUser && (!MessageService.get(id) || !MessageService.get(id).$resolved || !MessageService.get(id).allowed)">You do not have permission to access this chatroom.</div>
+  <form ng-controller="MessageFormCtrl" name="newPostForm" ng-show="UserService.currentUser && MessageService.get(id).allowed">
+    <textarea required="" rows="3" cols="75" ng-enter="addMessage(room)" placeholder="Share your thoughts..." ng-model="modelObject.text" ></textarea>
+    <input type="submit" class="submit-new-post btn btn-blue s-b-s" ng-click="addMessage(room)" value="Post" ng-disabled="!newPostForm.$valid"/>
   </form>
 </main>

@@ -1,12 +1,12 @@
 (function() {
   function UserDataService($firebaseObject, $firebaseArray) {
     const UserData = { },
-          ref = firebase.database().ref().child('users');
-    let allUsers = $firebaseArray(ref);
+          ref = firebase.database().ref('users');
+    let allUsers;// = $firebaseArray(ref);
 
     UserData.init = function (user) {
       if (user) {
-        let settings = $firebaseObject(firebase.database().ref('/users/'+user.uid));
+        let settings = $firebaseObject(ref.child(user.uid));
         settings.$loaded()
           .then((data) => {
             data.$save();
@@ -14,17 +14,27 @@
             data.photoURL = user.photoURL;
             data.email = user.email;
             data.$save();
-            allUsers = allUsers || $firebaseArray(ref);
+            UserData.waitForAllUsers();
             console.log("The user's info was saved");
+          })
+          .catch((error) => {
+            console.log("Failded to initialize userData.", error);
           });
+        return settings;
       }
     };
 
+    UserData.waitForAllUsers = function () {
+      if (!allUsers) allUsers = $firebaseArray(ref);
+      return allUsers.$loaded();
+    };
+
     UserData.getUserIdFromEmail = function (email) {
-      for (let val of allUsers) {
-        if (val.email === email) return val.$id;
+      if (allUsers) {
+        for (let val of allUsers) {
+          if (val.email === email) return val.$id;
+        }
       }
-      return "";
     }
 
     UserData.set = function (userId, field, value) {

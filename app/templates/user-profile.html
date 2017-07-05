@@ -5,23 +5,25 @@
       <div class="stacked-field">
         <label for="userEmail">Email </label>
         <input id="userEmail" name="userEmail" type="email" ng-model="profile.email" />
-        <span><i>Current: {{UserService.currentUser.email}}</i></span>
+        <div class="font-sm"><i>Current: {{UserService.currentUser.email}}</i></div>
       </div>
       <div class="stacked-field">
         <label for="userName">Name </label>
         <input id="userName" name="userName" type="text" ng-model="profile.displayName" />
-        <span><i>Current: {{UserService.currentUser.displayName || '[blank]'}}</i></span>
+        <div class="font-sm"><i>Current: {{UserService.currentUser.displayName || '[blank]'}}</i></div>
       </div>
       <div class="stacked-field">
         <label for="userPhoto">Profile Pic </label>
         <input id="userPhoto" name="userPicture" type="text" ng-model="profile.photoURL" />
-        <span><i>Current: {{UserService.currentUser.photoURL || '[blank]'}}</i></span>
+        <div class="font-sm"><i>Current: {{UserService.currentUser.photoURL || '[blank]'}}</i></div>
       </div>
       <div class="stacked-field">
-        <input type="submit" class="btn s-b-s btn-green" ng-click="UserService.updateProfile($event, profile)" ng-disabled="!profile.email && !profile.displayName && !profile.photoURL" value="Save"/>
+        <input type="submit" class="btn s-b-s btn-green float-right" ng-click="UserService.updateProfile($event, profile)" ng-disabled="!profile.email && !profile.displayName && !profile.photoURL" value="Save"/>
       </div>
     </form>
-    <button class="btn btn-grey" ng-click="newAuth={}" ng-show="!newAuth" >Change Password</button>
+    <div>
+      <button class="btn btn-grey" ng-click="newAuth={}" ng-show="!newAuth" >Change Password</button>
+    </div>
     <form class='user-password' name="userProfile" ng-show="UserService.currentUser && newAuth">
       <div class="stacked-field">
         <label>Current Password </label>
@@ -36,8 +38,8 @@
         <input name="newPasswordConfirm" type="password"  ng-model="newAuth.confirmPwd" />
       </div>
       <div class="stacked-field">
-        <input type="submit" class="btn s-b-s btn-green" ng-click="UserService.updatePassword($event, newAuth);newAuth=null" value="Save" />
-        <input type="reset" class="btn s-b-s btn-red" ng-click="newAuth=null" value="Cancel" />
+        <input type="reset" class="btn s-b-s btn-grey" ng-click="newAuth=null" value="Cancel" />
+        <input type="submit" class="btn s-b-s btn-green float-right" ng-click="UserService.updatePassword($event, newAuth);newAuth=null" value="Save" />
       </div>
     </form>
   </main>

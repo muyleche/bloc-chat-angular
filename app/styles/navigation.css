@@ -23,22 +23,35 @@ aside.sidebar {
   width: 100%;
 }
 
-li.chatroom-item {
+.chatroom-item {
   position: relative;
   padding: 1px 2px;
+  display: table;
+  width: 100%;
 }
 
-li.chatroom-item a:hover {
+.chatroom-item a:hover {
   color: rgba(255,255,255, 0.7);
 }
 
-li.chatroom-item [disabled].btn.icon-only,
-li.chatroom-item [disabled].btn.icon-only {
+.chatroom-item [disabled].btn.icon-only,
+.chatroom-item [disabled].btn.icon-only {
   visibility: hidden;
 }
 
-li.chatroom-item button.favorite {
+.chatroom-item button.favorite {
   color: goldenrod;
+}
+
+.chatroom-item > a {
+  display: table-cell;
+  width: 100%;
+}
+
+.chatroom-item-buttons {
+  display: table-cell;
+  white-space: nowrap;
+  vertical-align: middle;
 }
 
 .new-chatroom-form {

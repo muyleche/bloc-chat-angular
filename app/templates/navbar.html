@@ -12,15 +12,15 @@
     </a>
     <button type="button" name="auth-log-out" class='navbar-link btn btn-transparent font-sm' ng-click="UserService.logOut()" ng-show="UserService.currentUser">Log out</button>
   </div>
-  <div class="user-auth-section navbar-area float-right">
-    <form name="userAuthForm" class="navbar-link"  ng-hide="UserService.currentUser || UserService.loading">
+  <div ng-controller="LoginFormCtrl" class="user-auth-section navbar-area float-right">
+    <form novalidate name="userAuthForm" class="navbar-link"  ng-hide="UserService.currentUser || UserService.loading">
       <label for="user-keep-logged-in" class="font-sm black-txt s-b-s m-auto" >
         Remember me
-        <input id="user-remember-me" type="checkbox" class="s-b-s" name="userRememberMe" ng-model="auth.rememberMe" ng-init="auth.rememberMe = true"/>
-      </label><input autofocus type="email" class="s-b-s" name="userEmail" placeholder="Email" required ng-init="auth.email = UserService.remembered" ng-model="auth.email" />
-      <input type="password" class="s-b-s" name="userPassword" placeholder="Password" required ng-model="auth.password"/>
-      <input type="submit" name="auth-log-in" class='btn btn-green s-b-s font-sm' ng-click="UserService.logIn($event, auth)" ng-disabled="!userAuthForm.$valid" value="Log in"/>
-      <input type="reset" name="auth-sign-up" class='btn btn-transparent s-b-s font-sm' ng-click="UserService.signUp($event, auth)" ng-disabled="!userAuthForm.$valid" value="Sign up"/>
+        <input id="user-remember-me" type="checkbox" class="s-b-s" name="userRememberMe" ng-model="modelObject.rememberMe" ng-init="modelObject.rememberMe = true"/>
+      </label><input autofocus type="email" class="s-b-s" name="userEmail" placeholder="Email" required ng-init="modelObject.email = UserService.remembered" ng-model="modelObject.email" />
+      <input type="password" class="s-b-s" name="userPassword" placeholder="Password" required ng-model="modelObject.password"/>
+      <input type="submit" name="auth-log-in" class='btn btn-green s-b-s font-sm' ng-click="logIn()" ng-disabled="!userAuthForm.$valid" value="Log in"/>
+      <input type="reset" name="auth-sign-up" class='btn btn-transparent s-b-s font-sm' ng-click="signUp()" ng-disabled="!userAuthForm.$valid" value="Sign up"/>
     </form>
   </div>
 </navbar>

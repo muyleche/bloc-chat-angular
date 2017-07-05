@@ -6,6 +6,10 @@
       return UserService.userData && UserService.userData.favorites
         && UserService.userData.favorites.includes(next.value) ? 1 : -1;
     };
+
+    $scope.newRoomSubmit = function () {
+      console.log('newRoomSubmit');
+    };
   }
 
   angular

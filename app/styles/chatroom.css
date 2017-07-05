@@ -60,6 +60,6 @@ article:first-of-type.recent-message {
   margin: 0;
 }
 
-form[name="new-post-form"] {
+form[name="newPostForm"] {
   margin: 15px 0;
 }
