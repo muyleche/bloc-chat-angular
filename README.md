@@ -1,6 +1,6 @@
 ## Overview
 
-This is a chat application written in Angular using Google's Firebase 
+This is a chat application written in Angular using Google's Firebase
 
 ## Run the Application
 
