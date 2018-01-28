@@ -1,14 +1,14 @@
-html,
-body {
-  position: relative;
+body,
+html {
   min-height: 100vh;
+  position: relative;
 }
 
 body {
   box-sizing: border-box;
-  margin: 0px;
-  font-size: 16px;
   font-family: 'Open Sans';
+  font-size: 16px;
+  margin: 0;
   padding: 50px 20px 20px 20px;
 }
 
@@ -17,8 +17,8 @@ body {
 }
 
 .cover {
-  width: 100%;
   height: 100%;
+  width: 100%;
 }
 
 ui-view {
@@ -26,8 +26,8 @@ ui-view {
 }
 
 .col {
-  float: left;
   box-sizing: border-box;
+  float: left;
   padding: 10px;
 }
 
@@ -35,7 +35,7 @@ ui-view {
   float: right;
 }
 
-[ui-sref] {
+a[ui-sref] {
   cursor: pointer;
 }
 
@@ -79,19 +79,20 @@ ui-view {
   text-align: center;
 }
 
-input[type="text"],
-input[type="password"],
 input[type="email"],
+input[type="password"],
+input[type="text"],
 input[type="username"],
 textarea {
-  position: relative;
   background-color: transparent;
-  box-sizing: border-box;
   border: 1px solid transparent;
+  border-bottom-color: rgb(0,0,0);
   border-bottom-color: rgba(0,0,0, 0.9);
+  box-sizing: border-box;
+  font-size: 0.75rem;
   line-height: 1.25rem;
   padding: 0.1rem 0.5rem;
-  font-size: 0.75rem;
+  position: relative;
 }
 
 input[type="text"]:-webkit-autofill,
@@ -107,9 +108,9 @@ input[type="checkbox"] {
 }
 
 textarea {
-  padding: 0.2rem 0.5rem;
   border-bottom: none;
   box-shadow: 0 0 1px rgba(50,50,50, 0.5);
+  padding: 0.2rem 0.5rem;
 }
 
 input[type="text"]::placeholder,
@@ -117,6 +118,7 @@ input[type="password"]::placeholder,
 input[type="email"]::placeholder,
 input[type="username"]::placeholder,
 textarea::placeholder {
+  color: rgb(20,20,20);
   color: rgba(20,20,20, 0.5);
 }
 
@@ -125,10 +127,12 @@ input[type="password"]:focus,
 input[type="email"]:focus,
 input[type="username"]:focus,
 textarea:focus {
+  background-color: rgb(255,255,255);
   background-color: rgba(255,255,255, 0.2);
-  box-shadow: 1px 1px 1px 0px rgba(0,0,0, 0.5);
   border-bottom-color: transparent;
   border-radius: 3px;
+  box-shadow: 1px 1px 1px 0 rgb(0,0,0);
+  box-shadow: 1px 1px 1px 0 rgba(0,0,0, 0.5);
   outline: none;
 }
 
@@ -137,10 +141,10 @@ textarea:focus {
 }
 
 .btn {
-  border: none;
-  box-sizing: border-box;
   background-color: transparent;
+  border: none;
   border-radius: 3px;
+  box-sizing: border-box;
   line-height: 1rem;
   padding: 0.25rem 0.75rem;
   vertical-align: top;
@@ -169,12 +173,14 @@ textarea:focus {
 
 .btn:focus,
 .btn:hover {
-  outline: none;
+  box-shadow: 1px 1px 1px rgb(0,0,0);
   box-shadow: 1px 1px 1px rgba(0,0,0, 0.5);
+  outline: none;
 }
 
 .btn:active {
-  box-shadow: inset 0px 0px 3px rgba(0,0,0, 0.5);
+  box-shadow: inset 0 0 3px rgb(0,0,0);
+  box-shadow: inset 0 0 3px rgba(0,0,0, 0.5);
 }
 
 [disabled].btn {
@@ -188,9 +194,9 @@ textarea:focus {
 }
 
 .btn.icon-only {
+  background-color: transparent;
   border: none;
   box-sizing: border-box;
-  background-color: transparent;
   padding: 4px 5px;
 }
 
@@ -199,13 +205,14 @@ textarea:focus {
 .btn.icon-only:focus,
 .btn.icon-only:visited {
   box-shadow: none;
-  text-shadow: 1px 1px 2px rgba(0,0,0, 0.3);
   cursor: pointer;
+  text-shadow: 1px 1px 2px rgb(0,0,0);
+  text-shadow: 1px 1px 2px rgba(0,0,0, 0.3);
 }
 
 .stacked-field {
-  margin: 10px 0;
   display: block;
+  margin: 10px 0;
 }
 
 .stacked-field label,
@@ -220,7 +227,9 @@ a {
 }
 
 a:hover,
-a:hover > * {
+a:hover > div,
+a:hover > span,
+a:hover > i  {
   color: rgb(150, 200, 75);
   text-shadow: 1px 1px 1px rgba(50,50,50, 0.2);
 }
@@ -230,13 +239,13 @@ a:active {
 }
 
 .zero-height-wrapper {
-  height: 0px;
+  height: 0;
   width: 100%;
 }
 
 .top-left {
-  top: 0;
   left: 0;
+  top: 0;
 }
 
 .abs {
@@ -248,8 +257,8 @@ a:active {
 }
 
 .top-right {
-  top: 0px;
-  right: 0px;
+  right: 0;
+  top: 0;
 }
 
 .btn-transparent {
@@ -258,15 +267,17 @@ a:active {
 
 .btn-transparent:hover,
 .btn-transparent:focus {
-  background-color: rgba(200,200,200, 0.5);
           background: linear-gradient(rgba(220,220,220, 0.5), rgba(200,200,200, 0.5));
      -moz-background: linear-gradient(rgba(220,220,220, 0.5), rgba(200,200,200, 0.5));
   -webkit-background: linear-gradient(rgba(220,220,220, 0.5), rgba(200,200,200, 0.5));
+  background-color: rgb(200,200,200);
 }
 
 
-[disabled].btn-transparent,
-[disabled].btn-transparent:hover {
+a[disabled].btn-transparent,
+a[disabled].btn-transparent:hover,
+button[disabled].btn-transparent,
+button[disabled].btn-transparent:hover {
   background: transparent;
   color: rgb(200,200,200);
 }
@@ -277,25 +288,25 @@ a:active {
 }
 
 .btn-green {
-  background-color: rgb(150, 200, 75);
           background: linear-gradient(rgb(150, 200, 75), rgb(140, 190, 70));
      -moz-background: linear-gradient(rgb(150, 200, 75), rgb(140, 190, 70));
   -webkit-background: linear-gradient(rgb(150, 200, 75), rgb(140, 190, 70));
+  background-color: rgb(150, 200, 75);
 }
 
 .btn-red {
-  background-color: rgb(222, 59, 59);
           background: linear-gradient(rgb(222, 59, 59), rgb(215, 50, 50));
      -moz-background: linear-gradient(rgb(222, 59, 59), rgb(215, 50, 50));
   -webkit-background: linear-gradient(rgb(222, 59, 59), rgb(215, 50, 50));
+  background-color: rgb(222, 59, 59);
   color: whitesmoke;
 }
 
 .btn-blue {
-  background-color: rgb(222, 59, 59);
           background: linear-gradient(rgb(65, 105, 225), rgb(75, 90, 200));
      -moz-background: linear-gradient(rgb(65, 105, 225), rgb(75, 90, 200));
   -webkit-background: linear-gradient(rgb(65, 105, 225), rgb(75, 90, 200));
+  background-color: rgb(222, 59, 59);
   color: whitesmoke;
 }
 
@@ -318,20 +329,22 @@ a:active {
 }
 
 .loading::before {
-  content: " ";
-  margin: auto;
-  top: 50%;
-  width: 50px;
-  height: 25px;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-name: spin;
+  animation-timing-function: cubic-bezier(0.8,0.5,0.5,0.3);
+  border: 0.75rem solid rgb(0,0,0);
+  border: 0.75rem solid rgba(0,0,0,0.5);
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
-  border: 0.75rem solid rgba(0,0,0,0.5);
   border-top: none;
-  animation-name: spin;
-  animation-iteration-count: infinite;
-  animation-duration: 1s;
+  box-sizing: border-box;
+  content: " ";
+  height: 25px;
+  margin: auto;
+  top: 50%;
   transform-origin: 50% 0;
-  animation-timing-function: cubic-bezier(0.8,0.5,0.5,0.3);
+  width: 50px;
 }
 
 @keyframes spin {

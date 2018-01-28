@@ -10,7 +10,7 @@
     this.userRooms = [];
 
     /**
-     * @function Initialize the public and private room lists.
+     * @function init Initialize the public and private room lists.
      */
     Rooms.init = function () {
       this.allPublic = this.allPublic || $firebaseArray(publicRef);
@@ -18,7 +18,7 @@
     };
 
     /**
-     * @function Retrieves the private rooms to which the currently logged-in user has access.
+     * @function getPrivateRooms Retrieves the private rooms to which the currently logged-in user has access.
      * @param  {$firebaseObject} invitations The currently logged-in user's invitations.
      */
     Rooms.getPrivateRooms = function (invitations) {
@@ -30,7 +30,7 @@
     };
 
     /**
-     * @function Get the rooms this user created.
+     * @function getUserRooms Get the rooms this user created.
      * @param  {$firebaseObject} userSettings The currently logged in user's settings.
      */
     Rooms.getUserRooms = function (userSettings) {
@@ -42,7 +42,7 @@
     };
 
     /**
-     * @function Add a new room object.
+     * @function add Add a new room object.
      * @param  {JavaScriptEventObject} event DOM event if this function was triggered from the DOM.
      * @param  {room} room    The room data to save.
      * @param  {$firebaseObject} userSettings The currently logged in user's settings.
@@ -78,7 +78,7 @@
     };
 
     /**
-     * @function Sets the 'lastMessage' property on a room object.
+     * @function updateLastMessage Sets the 'lastMessage' property on a room object.
      * @param  {$firebaseObject} room    The room object to update.
      * @param  {object} message The message object.
      */
@@ -95,7 +95,7 @@
     };
 
     /**
-     * @function Deletes the chatroom entry in the firebase array and relevant local arrays.
+     * @function remove Deletes the chatroom entry in the firebase array and relevant local arrays.
      * @param  {$firebaseObject} room The room to delete.
      */
     Rooms.remove = function (room) {
@@ -117,7 +117,7 @@
     };
 
     /**
-     * @function Retrieve a firebase object (or object from a firebase array) representing the chatroom with the provided id.
+     * @function get Retrieve a firebase object (or object from a firebase array) representing the chatroom with the provided id.
      * @param  {Number} id The id number of the chatroom.
      */
     Rooms.get = function (id) {
@@ -151,7 +151,7 @@
     };
 
     /**
-     * @function Empty the room arrays, both public and private.
+     * @function reset Empty the room arrays, both public and private.
      */
     Rooms.reset = function () {
       for (let room, i = 0; i < this.userRooms.length; i++) {

@@ -3,7 +3,7 @@ main.user-profile {
   padding: 0 0 15px;
 }
 
-form.user-profile,
-form.user-password {
+.user-profile,
+.user-password {
   display: inline-block;
 }

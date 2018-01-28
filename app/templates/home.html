@@ -9,18 +9,24 @@
   <div class="loading" ng-hide="RoomService.allPublic.$resolved"></div>
   <div class="feed-messages" ng-show="RoomService.allPublic.$resolved">
     <article class="recent-message" ng-if="room.lastMessage" ng-repeat="room in RoomService.allPublic | orderBy:{ lastMessage: { dateSubmitted }}:true">
-      <table>
-        <tr>
-          <td class="room-info">
-            <a class="font-md bold" ui-sref="room({id:'{{room.$id}}'})">{{room.name}}</a>
-            <div class="date-label font-sm">{{room.lastMessage.dateSubmitted | date:'short'}}</div>
-          </td>
-          <td class="message-wrapper">
-            <span class="author-label s-b-s">{{UserDataService.get(room.lastMessage.author).displayName || UserDataService.get(room.lastMessage.author).email}}</span>
-            <span>"{{room.lastMessage.text}}"</span>
-          </td>
-        </tr>
-      </table>
+      <div class="room-info">
+        <a class="font-md bold" ui-sref="room({id:'{{room.$id}}'})">{{room.name}}</a>
+        <div class="date-label font-sm">{{room.lastMessage.dateSubmitted | date:'short'}}</div>
+      </div>
+      <div class="message-wrapper">
+        <span class="author-label s-b-s">{{UserDataService.get(room.lastMessage.author).displayName || UserDataService.get(room.lastMessage.author).email}}</span>
+        <span>"{{room.lastMessage.text}}"</span>
+      </div>
+    </article>
+    <article class="recent-message" ng-if="room.lastMessage" ng-repeat="room in RoomService.userRooms | orderBy:{ lastMessage: { dateSubmitted }}:true">
+      <div class="room-info">
+        <a class="font-md bold" ui-sref="room({id:'{{room.$id}}'})">{{room.name}}</a>
+        <div class="date-label font-sm">{{room.lastMessage.dateSubmitted | date:'short'}}</div>
+      </div>
+      <div class="message-wrapper">
+        <span class="author-label s-b-s">{{UserDataService.get(room.lastMessage.author).displayName || UserDataService.get(room.lastMessage.author).email}}</span>
+        <span>"{{room.lastMessage.text}}"</span>
+      </div>
     </article>
   </div>
 </section>

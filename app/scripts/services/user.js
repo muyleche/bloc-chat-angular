@@ -1,27 +1,35 @@
 (function() {
   function UserService($state, $cookies, $firebaseAuth, $firebaseObject, UserDataService, RoomService, MessageService) {
-    const User = { loading: false },
+    const User = { loading: false, remembered: ($cookies.get('email') || '') },
           authObject = $firebaseAuth(),
           settingsRef = firebase.database().ref('settings'),
           invitationsRef = firebase.database().ref('invitations');
 
-    User.remembered = $cookies.get('email') || '';
-
+    /**
+     * Creates a new Firebase user with the provided information.
+     * @param  {Object} [options={email, password, rememberMe}] Object with email, password, rememberMe attributes.
+     * @return {Promise}        Promise object for the user auth request.
+     */
     User.signUp = function (options = {email, password, rememberMe}) {
       const authPromise = authObject.$createUserWithEmailAndPassword(options.email, options.password);
-      return finishLogin(authPromise, options.password, options.rememberMe);
+      return finishLogin(authPromise, options.rememberMe);
     };
 
+    /**
+     * Function to log in a user.
+     * @param  {Object} [options={email, password, rememberMe}] Object with email, password, rememberMe attributes.
+     * @return {Promise}        Promise object for the user auth request.
+     */
     User.logIn = function (options = {email, password, rememberMe}) {
       const authPromise = authObject.$signInWithEmailAndPassword(options.email, options.password);
-      return finishLogin(authPromise, options.password, options.rememberMe);
+      return finishLogin(authPromise, options.rememberMe);
     };
 
-    User.logInWithCreds = function (creds) {
-      finishLogin(authObject.$signInWithCredential(creds));
-    };
-
-    function finishLogin(authPromise, password, rememberMe) {
+    /**
+     * Function to standardize the handling of a login request.
+     * @param  {Promise} authPromise
+     */
+    function finishLogin(authPromise, rememberMe) {
       User.loading = true;
       return authPromise.then((user) => {
         User.currentUser = user;
@@ -49,6 +57,11 @@
       });
     }
 
+    /**
+     * Function to update user information.
+     * @param  {HTMLEvent} event         The HTML event that triggered the udpate (to access element).
+     * @param  {Object} [options={email,displayName,photoURL}]    The data to be udpated on this user.
+     */
     User.updateProfile = function (event, options = {email, displayName, photoURL}) {
       if (!this.currentUser) return;
       const {email, displayName, photoURL} = options,
@@ -90,6 +103,11 @@
       }
     };
 
+    /**
+     * Function to update the password for the currently logged in user.
+     * @param  {HTMLEvent} event                 The HTMl event that triggered this update (to access element).
+     * @param  {object} [options={currentPwd,newPwd,confirmPwd}] The data to be updated.
+     */
     User.updatePassword = function (event, options = {currentPwd, newPwd, confirmPwd}) {
       if (!this.currentUser) return;
       const {currentPwd, newPwd, confirmPwd} = options;
@@ -114,6 +132,9 @@
       }
     };
 
+    /**
+     * Log out the currently authenticated user.
+     */
     User.logOut = function () {
       if (authObject.$getAuth()) {
         const userId = this.currentUser.uid;
@@ -135,6 +156,10 @@
       }
     };
 
+    /**
+     * Toggle the provided room as a favorite of the currently logged in user.
+     * @param  {string} roomId The ID for the room to favorite/unfavorite.
+     */
     User.toggleFavorite = function (roomId) {
       if (this.userSettings) {
         if (!this.userSettings.favorites) this.userSettings.favorites = [];

@@ -2,18 +2,14 @@
   <h1>{{room.name}}</h1>
   <div class="loading" ng-hide="MessageService.get(id).$resolved"></div>
   <article class="chatroom-message" ng-show="MessageService.get(id).$resolved" ng-repeat="msg in MessageService.get(id) | orderBy:'dateSubmitted'">
-    <table>
-      <tr>
-        <td class="post-info">
-          <img class="author-thumbnail" ng-src="{{UserDataService.get(msg.author).photoURL || '/assets/images/profile-default.png'}}" alt="Author picture" />
-          <p class="author-label">{{UserDataService.get(msg.author).displayName || UserDataService.get(msg.author).email}}</p>
-          <p class="date-label">{{msg.dateSubmitted | date:"MMM dd - hh:mm a"}}</p>
-        </td>
-        <td class="message-wrapper">
-          <p>{{msg.text}}</p>
-        </td>
-      </tr>
-    </table>
+    <div class="post-info">
+      <img class="author-thumbnail" ng-src="{{UserDataService.get(msg.author).photoURL || '/assets/images/profile-default.png'}}" alt="Author picture" />
+      <div class="author-label">{{UserDataService.get(msg.author).displayName || UserDataService.get(msg.author).email}}</div>
+      <div class="date-label">{{msg.dateSubmitted | date:"MMM dd - hh:mm a"}}</div>
+    </div>
+    <div class="message-wrapper">
+      <p>{{msg.text}}</p>
+    </div>
   </article>
   <div ng-hide="UserService.currentUser">Log in or sign up to contribute to the discussion.</div>
   <div ng-show="UserService.currentUser && (!MessageService.get(id) || !MessageService.get(id).$resolved || !MessageService.get(id).allowed)">You do not have permission to access this chatroom.</div>

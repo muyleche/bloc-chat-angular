@@ -1,6 +1,6 @@
 <aside class="sidebar" ng-show="UserService.currentUser">
   <input type="text" class="chatroom-search" placeholder="Search chatrooms..." ng-model="roomQuery" />
-  <ul class="chatrooms" ng-show="userRooms.length">
+  <ul class="chatrooms">
     <li class="chatroom-item" ng-repeat="room in userRooms = (RoomService.userRooms | filter:{ name: roomQuery }) | orderBy:'$id':false:favoritesFirst track by room.$id">
       <a class="font-md" ui-sref="room({id: '{{room.$id}}'})">{{room.name}}</a>
       <div class="chatroom-item-buttons">

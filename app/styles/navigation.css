@@ -1,17 +1,17 @@
 aside.sidebar {
-  box-sizing: border-box;
-  padding: 15px;
-  padding-top: 75px;
-  width: 220px;
-  position: fixed;
-  left: 0;
-  top: 0;
-  bottom: 0;
+  align-items: flex-start;
   background-color: gray;
-  box-shadow: 0px 0px 5px 0px black;
+  bottom: 0;
+  box-shadow: 0 0 5px 0 black;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  left: 0;
+  padding: 15px;
+  padding-top: 75px;
+  position: fixed;
+  top: 0;
+  width: 220px;
 }
 
 .chatroom-search {
@@ -24,13 +24,15 @@ aside.sidebar {
 }
 
 .chatroom-item {
-  position: relative;
-  padding: 1px 2px;
+  box-sizing: border-box;
   display: table;
+  padding: 1px 2px;
+  position: relative;
   width: 100%;
 }
 
 .chatroom-item a:hover {
+  color: rgb(255,255,255);
   color: rgba(255,255,255, 0.7);
 }
 
@@ -39,7 +41,7 @@ aside.sidebar {
   visibility: hidden;
 }
 
-.chatroom-item button.favorite {
+.chatroom-item .favorite {
   color: goldenrod;
 }
 
@@ -55,6 +57,7 @@ aside.sidebar {
 }
 
 .new-chatroom-form {
+  border: 1px solid rgb(0,0,0);
   border: 1px solid rgba(0,0,0, 0.3);
   border-radius: 3px;
   box-sizing: content-box;
@@ -78,17 +81,17 @@ navbar ul {
 }
 
 navbar {
-  position: fixed;
-  z-index: 1000;
-  box-sizing: border-box;
-  padding: 0 10px;
-  width: 100%;
-  height: 50px;
-  top: 0;
-  left: 0;
-  box-shadow: 0px 0px 5px 0px black;
   background-color: royalblue;
+  box-shadow: 0 0 5px 0 black;
+  box-sizing: border-box;
   color: white;
+  height: 50px;
+  left: 0;
+  padding: 0 10px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
 }
 
 navbar .logo {
@@ -96,16 +99,16 @@ navbar .logo {
 }
 
 navbar .logo img {
-  width: 40px;
   height: 40px;
+  width: 40px;
   vertical-align: middle;
 }
 
 navbar .chatter-box {
-  padding-left: 0px;
-  vertical-align: middle;
   display: inline-block;
+  padding-left: 0;
   text-shadow: 2px 2px rgba(0,0,0,0.8);
+  vertical-align: middle;
 }
 
 navbar ul {
@@ -115,13 +118,13 @@ navbar ul {
 navbar a,
 navbar a:active,
 navbar a:visited {
-  text-decoration: none;
   color: white;
+  text-decoration: none;
 }
 
 .navbar-area {
-  height: 100%;
   display: inline-flex;
+  height: 100%;
 }
 
 .navbar-link {
@@ -142,7 +145,7 @@ navbar a:visited {
 }
 
 .user-profile-image {
-  display: inline;
-  width: 30px;
+  display: inline-block;
   height: 30px;
+  width: 30px;
 }

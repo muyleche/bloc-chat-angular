@@ -1,33 +1,40 @@
 .chatroom-message,
 .recent-message {
+  border: 1px solid rgb(50,50,50);
   border: 1px solid rgba(50,50,50, 0.75);
   border-top: none;
 }
 
 article:first-of-type.chatroom-message,
 article:first-of-type.recent-message {
+  border-top: 1px solid rgb(50,50,50);
   border-top: 1px solid rgba(50,50,50, 0.75);
 }
 
+article {
+  display: grid;
+  grid: 'author post';
+  grid-template-columns: 125px;
+}
+
 .room-info {
-  width: 100px;
+  grid-area: author;
 }
 
 .post-info {
+  border-right: 1px solid rgb(50,50,50);
   border-right: 1px solid rgba(50,50,50, 0.75);
+  box-sizing: border-box;
   font-size: 0.75rem;
+  grid-area: author;
   height: 100%;
-  width: 100px;
   padding: 0.5rem;
-}
-
-.post-info > p {
-  margin: 0;
 }
 
 .recent-message {
   border-left: none;
   border-right: none;
+  grid-area: post;
 }
 
 .recent-message .post-info {
@@ -46,14 +53,15 @@ article:first-of-type.recent-message {
 }
 
 .author-thumbnail {
-  width: 50px;
   height: 50px;
+  width: 50px;
 }
 
 .message-wrapper {
+  font-size: 14px;
+  grid-area: post;
   padding: 5px 10px;
   vertical-align: top;
-  font-size: 14px;
 }
 
 .message-wrapper > p {
