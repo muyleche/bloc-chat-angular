@@ -20,8 +20,8 @@
     </li>
   </ul>
   <div ng-controller="RoomFormCtrl">
-    <button type="button" class="new-chatroom-form" class="new-chatroom btn btn-green float-left ion-plus" ng-click="showForm()" ng-show="!modelObject && UserService.currentUser"> New Room</button>
-    <form novalidate name="chatroomForm" ng-show="modelObject">
+    <button type="button" class="new-chatroom btn btn-green float-left ion-plus" ng-click="showForm()" ng-show="!modelObject && UserService.currentUser"> New Room</button>
+    <form novalidate class="new-chatroom-form" name="chatroomForm" ng-show="modelObject">
       <input type="text" form-focus name="roomName" class="new-chatroom-name" placeholder="Chatroom name..." required="" ng-model="modelObject.name"/>
       <textarea name="roomInvitees" ng-enter="addRoom()" class="new-chatroom-invitations" placeholder="Invitees..." ng-model="modelObject.invitations"></textarea>
       <textarea name="roomDescription" rows="3" ng-enter="addRoom()" class="new-chatroom-description" placeholder="Description..." ng-model="modelObject.description"></textarea>
