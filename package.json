@@ -15,7 +15,7 @@
   "dependencies": {
     "angular-ui-bootstrap": "^2.5.0",
     "angularfire": "^2.3.0",
-    "hapi": "~7.5.0",
+    "hapi": "~18.1.0",
     "path": "^0.4.9"
   },
   "devDependencies": {
